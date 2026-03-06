@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 죽방클럽 JUKBANG.CLUB
 
-## Getting Started
+당구대회 관리 홈페이지 (Next.js App Router + MySQL + Prisma)
 
-First, run the development server:
+## 기술 스택
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Next.js 16 (App Router), React, TypeScript
+- TailwindCSS
+- MySQL, Prisma ORM
+- Vercel 배포 가능, 모바일 반응형, PWA 지원
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 설정
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **의존성 설치**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **환경 변수**
+   - `.env` 파일 생성 후 `DATABASE_URL` 설정 (MySQL 연결 문자열)
+   - 예: `DATABASE_URL="mysql://user:password@localhost:3306/jukbangclub"`
 
-## Learn More
+3. **DB 마이그레이션 및 시드**
+   ```bash
+   npx prisma db push
+   npm run db:seed
+   ```
+   - 시드 후 **관리자 계정**: ID `zwanje` / PW `1010`
 
-To learn more about Next.js, take a look at the following resources:
+## 실행
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 개발: `npm run dev`
+- 빌드: `npm run build`
+- 프로덕션: `npm start`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 주요 경로
 
-## Deploy on Vercel
+- **사이트**: `/` (HOME), `/competition`, `/lesson`, `/venue`, `/results`
+- **회원**: `/login`, `/signup`, `/my`, `/find-id`, `/find-pw`
+- **관리자**: `/admin/login` → 로그인 후 `/admin` (대시보드, 설정, 게시판, 대회, 레슨, 중계)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## PWA
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `public/manifest.json` 설정됨. 스마트폰에서 "홈 화면에 추가" 가능.
+- 아이콘: `public/icon-192.png`, `public/icon-512.png` 를 추가하면 됨 (없어도 동작).
+
+## Vercel 배포
+
+1. 저장소 연결 후 프로젝트 생성
+2. 환경 변수에 `DATABASE_URL` 설정 (PlanetScale, Neon 등 MySQL 호환 DB 권장)
+3. 빌드 명령: `npm run build`
