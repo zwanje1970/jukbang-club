@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 enum UserRole {
@@ -90,6 +91,8 @@ model Application {
   competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 
   @@unique([userId, competitionId])
+  @@index([userId])
+  @@index([competitionId])
 }
 
 model Lesson {
@@ -118,6 +121,8 @@ model LessonApplication {
   lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
 }
 
 model Board {
@@ -140,6 +145,9 @@ model BoardPost {
 
   board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([boardId])
+  @@index([userId])
 }
 
 model Venue {
