@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyPassword, setSession } from "@/lib/auth";
+import { verifyPassword, SESSION_COOKIE, getSessionCookieOptions } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,12 +20,14 @@ export async function POST(req: NextRequest) {
     if (admin && user.role !== "ADMIN") {
       return NextResponse.json({ error: "관리자만 접근할 수 있습니다." }, { status: 403 });
     }
-    await setSession(user.id);
-    return NextResponse.json({
+    const payload = {
       ok: true,
       user: { id: user.id, username: user.username, name: user.name, role: user.role },
       redirect: admin ? "/admin" : "/",
-    });
+    };
+    const res = NextResponse.json(payload);
+    res.cookies.set(SESSION_COOKIE, user.id, getSessionCookieOptions());
+    return res;
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "로그인 처리 중 오류가 발생했습니다." }, { status: 500 });

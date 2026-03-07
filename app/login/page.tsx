@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,8 +24,8 @@ export default function LoginPage() {
         setError(data.error || "로그인에 실패했습니다.");
         return;
       }
-      router.push(data.redirect || "/");
-      router.refresh();
+      // 쿠키가 적용된 상태로 새로고침되도록 전체 이동
+      window.location.href = data.redirect || "/";
     } finally {
       setLoading(false);
     }
