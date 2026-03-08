@@ -18,10 +18,10 @@ export async function POST(req: NextRequest) {
     if (!competition || competition.status !== "open") {
       return NextResponse.json({ error: "해당 대회 신청이 불가합니다." }, { status: 400 });
     }
-    const [{ count }] = await prisma.$queryRaw<[{ count: number | bigint }]>`
-      SELECT COUNT(*) as count FROM Application WHERE competitionId = ${competitionId} AND rejectedAt IS NULL
-    `;
-    if (Number(count) >= competition.maxParticipants) {
+    const count = await prisma.application.count({
+      where: { competitionId, rejectedAt: null },
+    });
+    if (count >= competition.maxParticipants) {
       return NextResponse.json({ error: "참가 인원이 마감되었습니다." }, { status: 400 });
     }
 

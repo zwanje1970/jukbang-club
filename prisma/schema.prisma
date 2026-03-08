@@ -1,12 +1,11 @@
-// JUKBANG.CLUB - MySQL + Prisma
+// JUKBANG.CLUB - Supabase (PostgreSQL) + Prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
