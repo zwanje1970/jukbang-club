@@ -28,7 +28,7 @@ export default function LoginPage() {
         return;
       }
       // 쿠키가 적용된 상태로 새로고침되도록 전체 이동
-      window.location.href = data.redirect || "/";
+      if (typeof window !== "undefined") window.location.href = data.redirect || "/";
     } finally {
       setLoading(false);
     }

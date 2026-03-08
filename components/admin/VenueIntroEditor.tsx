@@ -57,18 +57,21 @@ const VenueIntroEditor = forwardRef<VenueIntroEditorRef, VenueIntroEditorProps>(
   }, [selectedTableTick]);
 
   const exec = useCallback((cmd: string, arg?: string) => {
+    if (typeof document === "undefined") return;
     document.execCommand(cmd, false, arg);
     editorRef.current?.focus();
     onChange(editorRef.current?.innerHTML ?? "");
   }, [onChange]);
 
   const applyMyeongjo = useCallback(() => {
+    if (typeof document === "undefined") return;
     editorRef.current?.focus();
     document.execCommand("fontName", false, "Georgia");
     onChange(editorRef.current?.innerHTML ?? "");
   }, [onChange]);
 
   const insertImageAtCursor = useCallback((url: string) => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
     const editor = editorRef.current;
     if (!editor) return;
     editor.focus();
@@ -97,6 +100,7 @@ const VenueIntroEditor = forwardRef<VenueIntroEditorRef, VenueIntroEditorProps>(
   }, [onChange]);
 
   const insertImage = useCallback(async () => {
+    if (typeof document === "undefined") return;
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/jpeg,image/png,image/gif,image/webp";
@@ -149,6 +153,7 @@ const VenueIntroEditor = forwardRef<VenueIntroEditorRef, VenueIntroEditorProps>(
   }, []);
 
   const getSelectedBlock = useCallback((): HTMLImageElement | HTMLTableElement | null => {
+    if (typeof window === "undefined") return null;
     const sel = window.getSelection();
     const editor = editorRef.current;
     if (!sel || sel.rangeCount === 0 || !editor) return null;
@@ -209,6 +214,7 @@ const VenueIntroEditor = forwardRef<VenueIntroEditorRef, VenueIntroEditorProps>(
   }, [syncContent]);
 
   const getSelectedTable = useCallback((): HTMLTableElement | null => {
+    if (typeof window === "undefined") return null;
     if (selectedTableRef.current?.parentNode) return selectedTableRef.current;
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return null;
@@ -222,6 +228,7 @@ const VenueIntroEditor = forwardRef<VenueIntroEditorRef, VenueIntroEditorProps>(
   }, []);
 
   const insertTable = useCallback((rows: number, cols: number, options?: { bgColor?: string; borderColor?: string; borderWidth?: string }) => {
+    if (typeof document === "undefined") return;
     const editor = editorRef.current;
     if (!editor) return;
     editor.focus();

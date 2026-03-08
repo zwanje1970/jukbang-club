@@ -29,6 +29,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
   }, []);
 
   const imageHandler = useCallback(() => {
+    if (typeof document === "undefined") return;
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/jpeg,image/png,image/gif,image/webp";

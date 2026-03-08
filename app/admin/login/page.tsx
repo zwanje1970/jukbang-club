@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
         setError(data.error || "로그인에 실패했습니다.");
         return;
       }
-      window.location.href = "/admin";
+      if (typeof window !== "undefined") window.location.href = "/admin";
       return;
     } finally {
       setLoading(false);

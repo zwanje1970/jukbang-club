@@ -48,6 +48,7 @@ export default function NotificationBanner() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     function onMessage(e: MessageEvent) {
       if (e.data === "notification-popup-close" && popupRef.current) {
         try {
@@ -63,6 +64,7 @@ export default function NotificationBanner() {
   }, [router]);
 
   function openPopup() {
+    if (typeof window === "undefined") return;
     popupRef.current = window.open(
       "/notifications-popup",
       "notifications",

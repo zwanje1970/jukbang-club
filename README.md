@@ -47,6 +47,11 @@
 
 ## Vercel 배포
 
-1. 저장소 연결 후 프로젝트 생성
-2. 환경 변수에 `DATABASE_URL` 설정 (PlanetScale, Neon 등 MySQL 호환 DB 권장)
-3. 빌드 명령: `npm run build`
+1. 저장소 연결 후 프로젝트 생성.
+2. **환경 변수** (둘 중 하나):
+   - **방법 A**: `DATABASE_URL` 하나만 설정  
+     예: `mysql://user:password@host:3306/jukbangclub`
+   - **방법 B**: DB 항목 따로 설정 시 빌드 시 자동으로 `DATABASE_URL` 생성  
+     `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT`(선택, 기본 3306)
+3. **빌드**: 기본 `npm run build` 사용.  
+   - `scripts/set-database-url.js`가 `DATABASE_URL`이 없으면 `DB_*`로 조합한 뒤 `prisma generate` → `next build` 실행.

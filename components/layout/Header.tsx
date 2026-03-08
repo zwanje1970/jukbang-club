@@ -39,7 +39,7 @@ export default function Header() {
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    window.location.href = "/";
+    if (typeof window !== "undefined") window.location.href = "/";
   }
 
   return (
