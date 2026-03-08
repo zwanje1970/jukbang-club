@@ -11,13 +11,14 @@ const POPUP_HEIGHT = 320;
 function getPopupOptions(): string {
   let left = 0;
   let top = 0;
-  if (typeof screen !== "undefined") {
-    const availLeft = screen.availLeft ?? 0;
-    const availTop = screen.availTop ?? 0;
-    const availW = screen.availWidth ?? screen.width;
-    const availH = screen.availHeight ?? screen.height;
-    left = Math.round(availLeft + (availW - POPUP_WIDTH) / 2);
-    top = Math.round(availTop + (availH - POPUP_HEIGHT) / 2);
+  if (typeof window !== "undefined") {
+    const s = window.screen as { availLeft?: number; availTop?: number; availWidth?: number; availHeight?: number; width?: number; height?: number };
+    const availLeft = s.availLeft ?? 0;
+    const availTop = s.availTop ?? 0;
+    const availW = s.availWidth ?? s.width ?? 0;
+    const availH = s.availHeight ?? s.height ?? 0;
+    left = Math.round(availLeft + availW - 400);
+    top = Math.round(availTop + availH - 200);
   }
   return [
     `width=${POPUP_WIDTH}`,
