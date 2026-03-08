@@ -19,3 +19,24 @@ export const prisma =
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+/**
+ * DB 연결 상태를 미리 확인합니다. 로그인 등 DB 사용 전에 호출해 연결 불가 시 즉시 에러 응답을 보낼 수 있습니다.
+ * @returns 연결 성공 시 { ok: true }, 실패 시 { ok: false, error: string }
+ */
+export async function checkDatabaseConnection(): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    await prisma.$connect();
+    return { ok: true };
+  } catch (e) {
+    const err = e instanceof Error ? e : new Error(String(e));
+    const message = err.message || String(e);
+    const name = err.name || "Error";
+    console.error("[prisma] DB 연결 실패:", {
+      name,
+      message,
+      stack: err.stack,
+    });
+    return { ok: false, error: message };
+  }
+}

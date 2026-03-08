@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, checkDatabaseConnection } from "@/lib/prisma";
 import { verifyPassword, SESSION_COOKIE, getSessionCookieOptions } from "@/lib/auth";
 
 function getDbConfigError(): NextResponse | null {
@@ -28,9 +28,31 @@ function getDbConfigError(): NextResponse | null {
   return null;
 }
 
+function logLoginError(context: string, e: unknown): void {
+  const err = e instanceof Error ? e : new Error(String(e));
+  console.error(`[api/auth/login] ${context}:`, {
+    name: err.name,
+    message: err.message,
+    stack: err.stack,
+  });
+}
+
 export async function POST(req: NextRequest) {
   const configError = getDbConfigError();
   if (configError) return configError;
+
+  const conn = await checkDatabaseConnection();
+  if (!conn.ok) {
+    logLoginError("DB 연결 실패", new Error(conn.error));
+    return NextResponse.json(
+      {
+        error: "데이터베이스에 연결할 수 없습니다. (연결 시간 초과 또는 호스트 설정을 확인해 주세요.)",
+        code: "DB_CONNECT",
+        detail: conn.error,
+      },
+      { status: 503 }
+    );
+  }
 
   try {
     const body = await req.json();
@@ -58,9 +80,9 @@ export async function POST(req: NextRequest) {
     res.cookies.set(SESSION_COOKIE, user.id, getSessionCookieOptions());
     return res;
   } catch (e) {
+    logLoginError("로그인 처리 중 예외", e);
     const err = e instanceof Error ? e : new Error(String(e));
     const detail = err.message || String(e);
-    console.error("[api/auth/login]", err);
     return NextResponse.json(
       {
         error: "로그인 처리 중 오류가 발생했습니다.",
