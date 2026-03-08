@@ -2,7 +2,36 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword, SESSION_COOKIE, getSessionCookieOptions } from "@/lib/auth";
 
+function getDbConfigError(): NextResponse | null {
+  const url = process.env.DATABASE_URL ?? "";
+  const isVercel = process.env.VERCEL === "1";
+  if (!url.trim()) {
+    return NextResponse.json(
+      {
+        error: "데이터베이스 연결 설정이 없습니다. (DATABASE_URL 환경 변수를 설정해 주세요.)",
+        code: "DB_CONFIG",
+        detail: "DATABASE_URL is not set.",
+      },
+      { status: 503 }
+    );
+  }
+  if (isVercel && (url.includes("localhost") || url.includes("127.0.0.1"))) {
+    return NextResponse.json(
+      {
+        error: "배포 환경에서는 데이터베이스 주소가 localhost일 수 없습니다. Vercel 환경 변수에서 DATABASE_URL을 실제 DB 호스트로 설정해 주세요.",
+        code: "DB_CONFIG",
+        detail: "DATABASE_URL contains localhost/127.0.0.1 on Vercel.",
+      },
+      { status: 503 }
+    );
+  }
+  return null;
+}
+
 export async function POST(req: NextRequest) {
+  const configError = getDbConfigError();
+  if (configError) return configError;
+
   try {
     const body = await req.json();
     const { username, password, admin, redirect: redirectTo } = body;
@@ -29,7 +58,16 @@ export async function POST(req: NextRequest) {
     res.cookies.set(SESSION_COOKIE, user.id, getSessionCookieOptions());
     return res;
   } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: "로그인 처리 중 오류가 발생했습니다." }, { status: 500 });
+    const err = e instanceof Error ? e : new Error(String(e));
+    const detail = err.message || String(e);
+    console.error("[api/auth/login]", err);
+    return NextResponse.json(
+      {
+        error: "로그인 처리 중 오류가 발생했습니다.",
+        code: "SERVER_ERROR",
+        detail,
+      },
+      { status: 500 }
+    );
   }
 }
