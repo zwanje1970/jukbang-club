@@ -16,10 +16,10 @@
    npm install
    ```
 
-2. **환경 변수**
-   - `.env` 파일 생성 후 `DATABASE_URL` 설정 (MySQL 연결 문자열)
-   - 예: `DATABASE_URL="mysql://user:password@localhost:3306/jukbangclub"`
-   - (선택) 네이버 지도: `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=fnut3c0bvd` — 대회당구장 안내 지도에 사용
+2. **환경 변수** (로컬 / 배포 분리)
+   - **로컬**: `.env.example`을 복사해 `.env.local`로 저장 후 `DATABASE_URL` 설정 (예: `mysql://user:password@localhost:3306/jukbangclub`)
+   - **배포(Vercel)**: 프로젝트 설정 > Environment Variables에서 `DATABASE_URL`을 **실제 DB 호스트**로 설정 (localhost 사용 시 연결 실패)
+   - (선택) 네이버 지도: `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=...` — 대회당구장 안내 지도에 사용
 
 3. **DB 마이그레이션 및 시드**
    ```bash
@@ -48,10 +48,9 @@
 ## Vercel 배포
 
 1. 저장소 연결 후 프로젝트 생성.
-2. **환경 변수** (둘 중 하나):
+2. **환경 변수** (배포 시 반드시 실제 DB 호스트 사용, localhost 불가):
    - **방법 A**: `DATABASE_URL` 하나만 설정  
-     예: `mysql://user:password@host:3306/jukbangclub`
-   - **방법 B**: DB 항목 따로 설정 시 빌드 시 자동으로 `DATABASE_URL` 생성  
-     `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT`(선택, 기본 3306)
+     예: `mysql://user:password@실제호스트:3306/jukbangclub`
+   - **방법 B**: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT` 설정 시 빌드 시 자동으로 `DATABASE_URL` 생성
 3. **빌드**: 기본 `npm run build` 사용.  
    - `scripts/set-database-url.js`가 `DATABASE_URL`이 없으면 `DB_*`로 조합한 뒤 `prisma generate` → `next build` 실행.

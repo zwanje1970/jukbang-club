@@ -1,18 +1,22 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { routes } from "@/lib/routes";
 import { COMPETITION_TYPES } from "@/types";
 import { formatDateKR } from "@/lib/date";
 
 export const dynamic = "force-dynamic";
 
 async function getCompetitions() {
-  // Note: include rejected in count until Prisma client has rejectedAt (run: npx prisma generate)
-  return prisma.competition.findMany({
-    where: { status: "open" },
-    orderBy: { date: "asc" },
-    take: 20,
-    include: { applications: { select: { id: true } } },
-  });
+  try {
+    return await prisma.competition.findMany({
+      where: { status: "open" },
+      orderBy: { date: "asc" },
+      take: 20,
+      include: { applications: { select: { id: true } } },
+    });
+  } catch {
+    return [];
+  }
 }
 
 function typeLabel(type: string) {
@@ -26,13 +30,13 @@ export default async function CompetitionPage() {
       <h1 className="mb-6 text-2xl font-bold text-gray-800">대회 안내</h1>
       <div className="mb-8 flex flex-wrap gap-4">
         <Link
-          href="/outline"
+          href={routes.outline}
           className="inline-flex items-center justify-center rounded-lg border-2 border-amber-500 bg-amber-50 px-6 py-4 text-lg font-semibold text-amber-800 shadow-sm transition hover:bg-amber-100"
         >
           대회요강
         </Link>
         <Link
-          href="/board/competition-inquiry"
+          href={routes.boardCompetitionInquiry}
           className="inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-6 py-4 text-lg font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50"
         >
           시합문의
@@ -42,7 +46,7 @@ export default async function CompetitionPage() {
         {list.map((c) => (
           <Link
             key={c.id}
-            href={`/competition/${c.id}`}
+            href={routes.competitionId(c.id)}
             className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
           >
             {c.imageUrl && (

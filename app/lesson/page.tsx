@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { routes } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
 
 async function getLessons() {
-  return prisma.lesson.findMany({
-    orderBy: { sortOrder: "asc" },
-  });
+  try {
+    return await prisma.lesson.findMany({
+      orderBy: { sortOrder: "asc" },
+    });
+  } catch {
+    return [];
+  }
 }
 
 const SLUG_LABELS: Record<string, string> = {
@@ -23,7 +28,7 @@ export default async function LessonPage() {
       <h1 className="mb-6 text-2xl font-bold text-gray-800">여성 당구교실</h1>
       <div className="mb-8">
         <Link
-          href="/board/lesson-inquiry"
+          href={routes.boardLessonInquiry}
           className="inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-6 py-4 text-lg font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50"
         >
           레슨문의
@@ -33,7 +38,7 @@ export default async function LessonPage() {
         {lessons.map((l) => (
           <Link
             key={l.id}
-            href={`/lesson/${l.slug}`}
+            href={routes.lessonSlug(l.slug)}
             className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
           >
             {l.imageUrl && (

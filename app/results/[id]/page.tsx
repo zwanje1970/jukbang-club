@@ -8,21 +8,24 @@ import JukbangTournamentSystem from "@/components/JukbangTournamentSystem";
 export const dynamic = "force-dynamic";
 
 async function getCompetition(id: string) {
-  const competition = await prisma.competition.findUnique({
-    where: { id },
-    include: {
-      applications: {
-        include: { user: { select: { name: true, username: true } } },
-        orderBy: [{ round: "asc" }, { prize: "desc" }],
+  try {
+    const competition = await prisma.competition.findUnique({
+      where: { id },
+      include: {
+        applications: {
+          include: { user: { select: { name: true, username: true } } },
+          orderBy: [{ round: "asc" }, { prize: "desc" }],
+        },
       },
-    },
-  });
-  if (!competition) return null;
-  // Filter out rejected applications (rejectedAt may be missing on older Prisma client)
-  const applications = competition.applications.filter(
-    (a) => (a as { rejectedAt?: Date | null }).rejectedAt == null
-  );
-  return { ...competition, applications };
+    });
+    if (!competition) return null;
+    const applications = competition.applications.filter(
+      (a) => (a as { rejectedAt?: Date | null }).rejectedAt == null
+    );
+    return { ...competition, applications };
+  } catch {
+    return null;
+  }
 }
 
 export default async function ResultDetailPage({ params }: { params: Promise<{ id: string }> }) {

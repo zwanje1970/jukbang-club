@@ -4,21 +4,29 @@ import VenueMap from "./VenueMap";
 export const dynamic = "force-dynamic";
 
 async function getVenues() {
-  return prisma.venue.findMany({
-    orderBy: { sortOrder: "asc" },
-  });
+  try {
+    return await prisma.venue.findMany({
+      orderBy: { sortOrder: "asc" },
+    });
+  } catch {
+    return [];
+  }
 }
 
 async function getVenueIntroSettings() {
-  const list = await prisma.siteSetting.findMany({
-    where: { key: { in: ["venueIntro", "venueIntroMapAddress", "venueIntroContact"] } },
-  });
-  const map = Object.fromEntries(list.map((s) => [s.key, s.value]));
-  return {
-    intro: map.venueIntro ?? "",
-    mapAddress: map.venueIntroMapAddress ?? "",
-    contact: map.venueIntroContact ?? "",
-  };
+  try {
+    const list = await prisma.siteSetting.findMany({
+      where: { key: { in: ["venueIntro", "venueIntroMapAddress", "venueIntroContact"] } },
+    });
+    const map = Object.fromEntries(list.map((s) => [s.key, s.value]));
+    return {
+      intro: map.venueIntro ?? "",
+      mapAddress: map.venueIntroMapAddress ?? "",
+      contact: map.venueIntroContact ?? "",
+    };
+  } catch {
+    return { intro: "", mapAddress: "", contact: "" };
+  }
 }
 
 export default async function VenuePage() {

@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { routes } from "@/lib/routes";
 
 const NAV_PUBLIC = [
-  { href: "/", label: "HOME" },
-  { href: "/competition", label: "대회안내" },
-  { href: "/results", label: "대회결과" },
-  { href: "/lesson", label: "당구교실" },
-  { href: "/venue", label: "대회당구장 안내" },
+  { href: routes.home, label: "HOME" },
+  { href: routes.competition, label: "대회안내" },
+  { href: routes.results, label: "대회결과" },
+  { href: routes.lesson, label: "당구교실" },
+  { href: routes.venue, label: "대회당구장 안내" },
 ];
 
 export default function Header() {
@@ -28,25 +29,25 @@ export default function Header() {
   type NavItem = { href: string; label: string; logout?: boolean };
   const navRight: NavItem[] = user
     ? [
-        { href: "/my", label: "마이페이지" },
+        { href: routes.my, label: "마이페이지" },
         { href: "#", label: "로그아웃", logout: true },
       ]
     : [
-        { href: "/login", label: "로그인" },
-        { href: "/signup", label: "회원가입" },
+        { href: routes.login, label: "로그인" },
+        { href: routes.signup, label: "회원가입" },
       ];
   const nav: NavItem[] = [...NAV_PUBLIC, ...navRight];
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    if (typeof window !== "undefined") window.location.href = "/";
+    if (typeof window !== "undefined") window.location.href = routes.home;
   }
 
   return (
     <header className="sticky top-0 z-50 bg-black text-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-1.5 text-lg font-semibold text-amber-400 hover:text-amber-300">
+          <Link href={routes.home} className="flex items-center gap-1.5 text-lg font-semibold text-amber-400 hover:text-amber-300">
             <span className="h-4 w-4 shrink-0 rounded-full bg-yellow-400" aria-hidden />
             <span className="h-4 w-4 shrink-0 rounded-full bg-red-500" aria-hidden />
             <span className="h-4 w-4 shrink-0 rounded-full bg-white" aria-hidden />
@@ -73,7 +74,7 @@ export default function Header() {
                 key={href}
                 href={href}
                 className={`text-sm font-medium transition hover:text-amber-400 ${
-                  pathname === href ? "text-amber-400" : "text-white"
+                  pathname?.toLowerCase() === href ? "text-amber-400" : "text-white"
                 }`}
               >
                 {label}

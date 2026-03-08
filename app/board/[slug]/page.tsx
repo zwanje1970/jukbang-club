@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { routes } from "@/lib/routes";
 import { formatDateTimeKR } from "@/lib/date";
 import BoardWriteForm from "./BoardWriteForm";
 import { getSession } from "@/lib/auth";
@@ -15,8 +16,8 @@ const BOARD_DEFAULTS: Record<string, string> = {
 const HIDE_LIST_SLUGS = new Set(["competition-inquiry", "lesson-inquiry"]);
 
 const EXIT_LINK: Record<string, string> = {
-  "competition-inquiry": "/competition",
-  "lesson-inquiry": "/lesson",
+  "competition-inquiry": routes.competition,
+  "lesson-inquiry": routes.lesson,
 };
 
 async function getBoard(slug: string) {
@@ -32,7 +33,8 @@ async function getBoard(slug: string) {
 }
 
 export default async function BoardPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+  const rawSlug = (await params).slug;
+  const slug = rawSlug.toLowerCase();
   let board = await getBoard(slug);
   if (!board && BOARD_DEFAULTS[slug]) {
     await prisma.board.create({

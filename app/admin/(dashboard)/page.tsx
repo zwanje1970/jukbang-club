@@ -1,14 +1,15 @@
 import Link from "next/link";
+import { routes } from "@/lib/routes";
 
 export default function AdminDashboardPage() {
   const links = [
-    { href: "/admin/competitions", label: "대회 관리" },
-    { href: "/admin/broadcast", label: "중계 설정" },
-    { href: "/admin/lessons", label: "레슨 관리" },
-    { href: "/admin/boards", label: "게시판 관리" },
-    { href: "/admin/participants", label: "대회운영(참가자, 대진표)" },
-    { href: "/admin/members", label: "회원관리" },
-    { href: "/admin/settings", label: "메인 설정" },
+    { href: routes.adminCompetitions, label: "대회 관리" },
+    { href: routes.adminBroadcast, label: "중계 설정" },
+    { href: routes.adminLessons, label: "레슨 관리" },
+    { href: routes.adminBoards, label: "게시판 관리" },
+    { href: routes.adminParticipants, label: "대회운영(참가자, 대진표)" },
+    { href: routes.adminMembers, label: "회원관리" },
+    { href: routes.adminSettings, label: "메인 설정" },
   ];
   return (
     <div>

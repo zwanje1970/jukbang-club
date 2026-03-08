@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { routes } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export default async function AdminBoardsPage() {
         {boards.map((b) => (
           <li key={b.id}>
             <Link
-              href={`/admin/boards/${b.slug}`}
+              href={routes.adminBoardsSlug(b.slug)}
               className="block rounded-lg border border-gray-200 bg-white px-4 py-3 hover:bg-gray-50"
             >
               {b.name} <span className="text-gray-500">({b._count.posts}건)</span>

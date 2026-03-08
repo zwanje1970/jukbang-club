@@ -10,9 +10,18 @@ export default async function ApplyPage({ params }: { params: Promise<{ competit
   const { competitionId } = await params;
   const session = await getSession();
 
-  const competition = await prisma.competition.findUnique({
-    where: { id: competitionId, status: "open" },
-  });
+  let competition;
+  try {
+    competition = await prisma.competition.findUnique({
+      where: { id: competitionId, status: "open" },
+    });
+  } catch {
+    return (
+      <div className="mx-auto max-w-md px-4 py-12 text-center">
+        <p className="text-gray-700">일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</p>
+      </div>
+    );
+  }
   if (!competition) notFound();
 
   if (!session) {
@@ -33,15 +42,27 @@ export default async function ApplyPage({ params }: { params: Promise<{ competit
     );
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.id },
-    select: { name: true, username: true, phone: true },
-  });
+  let user;
+  let existing;
+  try {
+    user = await prisma.user.findUnique({
+      where: { id: session.id },
+      select: { name: true, username: true, phone: true },
+    });
+    existing = user
+      ? await prisma.application.findUnique({
+          where: { userId_competitionId: { userId: session.id, competitionId } },
+        })
+      : null;
+  } catch {
+    return (
+      <div className="mx-auto max-w-md px-4 py-12 text-center">
+        <p className="text-gray-700">일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</p>
+      </div>
+    );
+  }
   if (!user) redirect("/login");
 
-  const existing = await prisma.application.findUnique({
-    where: { userId_competitionId: { userId: session.id, competitionId } },
-  });
   if (existing) {
     return (
       <div className="mx-auto max-w-md px-4 py-12 text-center">

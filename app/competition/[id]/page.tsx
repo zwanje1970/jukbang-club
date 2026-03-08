@@ -7,18 +7,25 @@ import { formatDateKR } from "@/lib/date";
 export const dynamic = "force-dynamic";
 
 async function getCompetition(id: string) {
-  return prisma.competition.findUnique({
-    where: { id },
-    include: {
-      // Filter rejected in memory until Prisma client is regenerated (where: { rejectedAt: null })
-      applications: { select: { id: true } },
-    },
-  });
+  try {
+    return await prisma.competition.findUnique({
+      where: { id },
+      include: {
+        applications: { select: { id: true } },
+      },
+    });
+  } catch {
+    return null;
+  }
 }
 
 async function getBankAccount() {
-  const s = await prisma.siteSetting.findUnique({ where: { key: "bankAccount" } });
-  return s?.value ?? "";
+  try {
+    const s = await prisma.siteSetting.findUnique({ where: { key: "bankAccount" } });
+    return s?.value ?? "";
+  } catch {
+    return "";
+  }
 }
 
 export default async function CompetitionDetailPage({ params }: { params: Promise<{ id: string }> }) {

@@ -1,15 +1,20 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { routes } from "@/lib/routes";
 import { formatDateKR } from "@/lib/date";
 
 export const dynamic = "force-dynamic";
 
 async function getPastCompetitions() {
-  return prisma.competition.findMany({
-    where: { status: { in: ["ended", "closed"] } },
-    orderBy: { date: "desc" },
-    take: 30,
-  });
+  try {
+    return await prisma.competition.findMany({
+      where: { status: { in: ["ended", "closed"] } },
+      orderBy: { date: "desc" },
+      take: 30,
+    });
+  } catch {
+    return [];
+  }
 }
 
 export default async function ResultsPage() {
@@ -21,7 +26,7 @@ export default async function ResultsPage() {
         {list.map((c) => (
           <li key={c.id}>
             <Link
-              href={`/results/${c.id}`}
+              href={routes.resultsId(c.id)}
               className="block rounded-lg border border-gray-200 bg-white px-4 py-3 transition hover:bg-gray-50"
             >
               <span className="font-medium text-gray-800">{c.name}</span>

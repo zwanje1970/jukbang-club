@@ -8,7 +8,7 @@ import NotificationBanner from "@/components/NotificationBanner";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  if (pathname === "/notifications-popup") {
+  if (pathname?.toLowerCase() === "/notifications-popup") {
     return <>{children}</>;
   }
   return (
