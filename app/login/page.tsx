@@ -24,15 +24,24 @@ export default function LoginPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const message = data.error || "로그인에 실패했습니다.";
+        let message = data.error || "로그인에 실패했습니다.";
+        if (res.status === 503) {
+          message =
+            data.error ||
+            "서버를 사용할 수 없습니다. (DB 연결 오류일 수 있습니다. 배포 환경에서는 Vercel 환경 변수 DATABASE_URL을 확인하세요.)";
+        }
         setError(message);
         if (data.detail != null) {
           console.error("[로그인 API 오류]", data.detail, data.code ? `(code: ${data.code})` : "");
         }
-        if (data.code === "DB_CONFIG") {
-          console.error("[로그인] DB 설정 오류: 배포 환경에서는 Vercel 프로젝트 설정 > Environment Variables에서 DATABASE_URL을 실제 DB 주소로 설정해야 합니다.");
+        if (data.code === "DB_CONFIG" || data.code === "DB_TIMEOUT" || data.code === "DB_CONNECT") {
           if (typeof window !== "undefined") {
-            window.alert("데이터베이스 연결 설정 오류입니다.\n\n배포 환경(Vercel)에서는 프로젝트 설정 > Environment Variables에서 DATABASE_URL을 localhost가 아닌 실제 DB 호스트 주소로 설정해 주세요.");
+            window.alert(
+              "데이터베이스 연결 오류입니다.\n\n" +
+                (data.code === "DB_CONFIG"
+                  ? "배포 환경(Vercel)에서는 프로젝트 설정 > Environment Variables에서 DATABASE_URL을 Supabase 등 실제 DB 주소(postgresql://...)로 설정해 주세요."
+                  : "DB 연결이 되지 않거나 시간이 초과되었습니다. DATABASE_URL과 Supabase 연결/방화벽을 확인하세요.")
+            );
           }
         }
         return;
