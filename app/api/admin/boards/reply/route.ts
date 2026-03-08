@@ -13,9 +13,23 @@ export async function POST(req: NextRequest) {
     if (!postId || !reply?.trim()) {
       return NextResponse.json({ error: "답변을 입력하세요." }, { status: 400 });
     }
+    const post = await prisma.boardPost.findUnique({
+      where: { id: postId },
+      select: { userId: true, title: true },
+    });
+    if (!post) {
+      return NextResponse.json({ error: "글을 찾을 수 없습니다." }, { status: 404 });
+    }
     await prisma.boardPost.update({
       where: { id: postId },
       data: { reply: reply.trim(), replyAt: new Date() },
+    });
+    const replyText = reply.trim();
+    await prisma.notification.create({
+      data: {
+        userId: post.userId,
+        message: `[문의답변] ${replyText}`,
+      },
     });
     return NextResponse.json({ ok: true });
   } catch (e) {

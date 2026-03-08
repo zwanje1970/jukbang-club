@@ -17,9 +17,11 @@ export default function BroadcastForm({ table }: { table: Table }) {
   const [status, setStatus] = useState(table.status);
   const [isActive, setIsActive] = useState(table.isActive);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSuccess(false);
     setLoading(true);
     try {
       await fetch("/api/admin/broadcast", {
@@ -33,6 +35,7 @@ export default function BroadcastForm({ table }: { table: Table }) {
         }),
       });
       router.refresh();
+      setSuccess(true);
     } finally {
       setLoading(false);
     }
@@ -65,9 +68,12 @@ export default function BroadcastForm({ table }: { table: Table }) {
           <span className="text-sm">ON (홈에 표시)</span>
         </label>
       </div>
-      <button type="submit" disabled={loading} className="mt-4 w-full rounded bg-amber-600 px-3 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50">
-        저장
-      </button>
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <button type="submit" disabled={loading} className="rounded bg-amber-600 px-3 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50">
+          저장
+        </button>
+        {success && <span className="text-sm text-green-600">저장되었습니다.</span>}
+      </div>
     </form>
   );
 }

@@ -19,6 +19,7 @@
 2. **환경 변수**
    - `.env` 파일 생성 후 `DATABASE_URL` 설정 (MySQL 연결 문자열)
    - 예: `DATABASE_URL="mysql://user:password@localhost:3306/jukbangclub"`
+   - (선택) 네이버 지도: `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=fnut3c0bvd` — 대회당구장 안내 지도에 사용
 
 3. **DB 마이그레이션 및 시드**
    ```bash

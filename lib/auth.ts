@@ -3,7 +3,8 @@ import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
 export const SESSION_COOKIE = "jukbang_session";
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+// 로그아웃 전까지 유지 (1년)
+const SESSION_MAX_AGE = 60 * 60 * 24 * 365;
 
 export function getSessionCookieOptions() {
   return {

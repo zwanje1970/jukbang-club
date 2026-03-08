@@ -11,15 +11,19 @@ async function getVenues() {
 
 async function getVenueIntroSettings() {
   const list = await prisma.siteSetting.findMany({
-    where: { key: { in: ["venueIntro", "venueIntroMapAddress"] } },
+    where: { key: { in: ["venueIntro", "venueIntroMapAddress", "venueIntroContact"] } },
   });
   const map = Object.fromEntries(list.map((s) => [s.key, s.value]));
-  return { intro: map.venueIntro ?? "", mapAddress: map.venueIntroMapAddress ?? "" };
+  return {
+    intro: map.venueIntro ?? "",
+    mapAddress: map.venueIntroMapAddress ?? "",
+    contact: map.venueIntroContact ?? "",
+  };
 }
 
 export default async function VenuePage() {
   const [venues, venueSettings] = await Promise.all([getVenues(), getVenueIntroSettings()]);
-  const { intro: venueIntro, mapAddress: venueIntroMapAddress } = venueSettings;
+  const { intro: venueIntro, mapAddress: venueIntroMapAddress, contact: venueIntroContact } = venueSettings;
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
       <h1 className="mb-8 text-2xl font-bold text-gray-800">대회 당구장 안내</h1>
@@ -28,17 +32,29 @@ export default async function VenuePage() {
           <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: venueIntro }} />
         </div>
       )}
-      {venueIntroMapAddress && (
+      {(venueIntroMapAddress || venueIntroContact) && (
         <div className="mb-10">
-          <h2 className="mb-3 text-lg font-semibold text-gray-800">위치</h2>
-          <div className="h-80 w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
-            <iframe
-              title="대회당구장 위치"
-              src={`https://map.naver.com/v5/search/${encodeURIComponent(venueIntroMapAddress)}/place`}
-              className="h-full w-full border-0"
-              allowFullScreen
-            />
+          <div className="mb-3 flex flex-wrap items-baseline gap-x-6 gap-y-1">
+            {venueIntroMapAddress && (
+              <span className="flex items-baseline gap-2">
+                <h2 className="text-lg font-semibold text-gray-800">위치</h2>
+                <span className="text-gray-600">{venueIntroMapAddress}</span>
+              </span>
+            )}
+            {venueIntroContact && (
+              <span className="flex items-baseline gap-2">
+                <h2 className="text-lg font-semibold text-gray-800">연락처</h2>
+                <span className="text-gray-600">{venueIntroContact}</span>
+              </span>
+            )}
           </div>
+          {venueIntroMapAddress && (
+            <>
+              <div className="h-80 w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                <VenueMap address={venueIntroMapAddress} name="대회당구장 위치" />
+              </div>
+            </>
+          )}
         </div>
       )}
       <div className="space-y-12">
@@ -56,11 +72,9 @@ export default async function VenuePage() {
                 {v.description && (
                   <div className="mt-4 prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: v.description }} />
                 )}
-                {v.lat != null && v.lng != null && (
-                  <div className="mt-4 h-64">
-                    <VenueMap lat={v.lat} lng={v.lng} name={v.name} />
-                  </div>
-                )}
+                <div className="mt-4 h-64">
+                  <VenueMap lat={v.lat} lng={v.lng} name={v.name} address={v.lat == null || v.lng == null ? v.address : undefined} />
+                </div>
               </div>
             </div>
           </section>

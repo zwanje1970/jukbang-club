@@ -71,15 +71,30 @@ export default function ApplyForm({ competitionId, user }: { competitionId: stri
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div>
         <label className="block text-sm font-medium text-gray-700">이름</label>
-        <input type="text" value={user.name} readOnly className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600" />
+        <input
+          type="text"
+          value={user.name}
+          readOnly
+          className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600"
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">아이디</label>
-        <input type="text" value={user.username} readOnly className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600" />
+        <input
+          type="text"
+          value={user.username}
+          readOnly
+          className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600"
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">전화번호</label>
-        <input type="text" value={user.phone} readOnly className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600" />
+        <input
+          type="text"
+          value={user.phone}
+          readOnly
+          className="mt-1 w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600"
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">입금자명</label>
@@ -109,7 +124,7 @@ export default function ApplyForm({ competitionId, user }: { competitionId: stri
       </div>
       <div className="flex items-center gap-2">
         <input type="checkbox" id="agree" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="rounded" />
-        <label htmlFor="agree" className="text-sm text-gray-700">대회 참가 신청합니다</label>
+        <label htmlFor="agree" className="text-sm text-gray-700">대회참가 신청합니다.(YOUTUBE 등 방송에 동의함)</label>
       </div>
       <button type="submit" disabled={loading} className="w-full rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">
         참가 신청하기

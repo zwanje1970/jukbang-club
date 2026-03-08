@@ -18,15 +18,18 @@ export async function POST(req: NextRequest) {
         slug,
         title,
         imageUrl: imageUrl || null,
-        fee: Number(fee) || 0,
+        fee: typeof fee === "string" ? fee : String(fee ?? "0"),
         period: period || "",
         content: content || "",
         sortOrder: Number(sortOrder) || 0,
       },
     });
     return NextResponse.json({ ok: true });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error(e);
-    return NextResponse.json({ error: "생성 실패" }, { status: 500 });
+    const msg = e && typeof e === "object" && "code" in e && (e as { code: string }).code === "P2002"
+      ? "이미 사용 중인 커리큘럼입니다. 다른 커리큘럼을 선택하거나 기존 레슨을 수정해 주세요."
+      : "생성 실패";
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

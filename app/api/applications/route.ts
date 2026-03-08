@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
   }
+
   try {
     const body = await req.json();
     const { competitionId, depositorName, score, recordImageUrl } = body;
@@ -17,13 +18,25 @@ export async function POST(req: NextRequest) {
     if (!competition || competition.status !== "open") {
       return NextResponse.json({ error: "해당 대회 신청이 불가합니다." }, { status: 400 });
     }
-    const count = await prisma.application.count({ where: { competitionId } });
-    if (count >= competition.maxParticipants) {
+    const [{ count }] = await prisma.$queryRaw<[{ count: number | bigint }]>`
+      SELECT COUNT(*) as count FROM Application WHERE competitionId = ${competitionId} AND rejectedAt IS NULL
+    `;
+    if (Number(count) >= competition.maxParticipants) {
       return NextResponse.json({ error: "참가 인원이 마감되었습니다." }, { status: 400 });
     }
+
+    const userId = session.id;
+
+    const existing = await prisma.application.findUnique({
+      where: { userId_competitionId: { userId, competitionId } },
+    });
+    if (existing) {
+      return NextResponse.json({ error: "이미 참가 신청하셨습니다." }, { status: 400 });
+    }
+
     await prisma.application.create({
       data: {
-        userId: session.id,
+        userId,
         competitionId,
         depositorName,
         score,

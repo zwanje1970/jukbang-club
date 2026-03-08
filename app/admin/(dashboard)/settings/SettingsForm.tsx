@@ -10,6 +10,7 @@ const KEYS = [
   "bankAccount",
   "venueIntro",
   "venueIntroMapAddress",
+  "venueIntroContact",
 ] as const;
 
 const LABELS: Record<string, string> = {
@@ -17,6 +18,7 @@ const LABELS: Record<string, string> = {
   bankAccount: "참가비 입금 계좌",
   venueIntro: "대회당구장 안내",
   venueIntroMapAddress: "지도 표시용 주소 (지번)",
+  venueIntroContact: "연락처",
 };
 
 const BANNER_RECOMMENDED = "1920 × 400 px (가로 × 세로)";
@@ -29,6 +31,7 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
     return o;
   });
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [bannerUploading, setBannerUploading] = useState(false);
   const venueEditorRef = useRef<VenueIntroEditorRef>(null);
 
@@ -56,6 +59,7 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
     const payload = { ...form };
     const editorHtml = venueEditorRef.current?.getValue();
     if (editorHtml !== undefined) payload.venueIntro = editorHtml;
+    setSuccess(false);
     setLoading(true);
     try {
       const res = await fetch("/api/admin/settings", {
@@ -69,7 +73,7 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
         alert(msg);
         return;
       }
-      alert("저장되었습니다.");
+      setSuccess(true);
       router.refresh();
     } finally {
       setLoading(false);
@@ -126,20 +130,36 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
           />
         </div>
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">지도 표시용 주소 (지번)</label>
-        <p className="mt-0.5 text-xs text-gray-500">주소를 입력하면 대회당구장 안내 페이지에 네이버 지도가 표시됩니다.</p>
-        <input
-          type="text"
-          value={form.venueIntroMapAddress ?? ""}
-          onChange={(e) => setForm((f) => ({ ...f, venueIntroMapAddress: e.target.value }))}
-          placeholder="예: 서울시 강남구 테헤란로 123"
-          className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
-        />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">지도 표시용 주소 (지번)</label>
+          <p className="mt-0.5 text-xs text-gray-500">대회당구장 안내 페이지에 네이버 지도가 표시됩니다.</p>
+          <input
+            type="text"
+            value={form.venueIntroMapAddress ?? ""}
+            onChange={(e) => setForm((f) => ({ ...f, venueIntroMapAddress: e.target.value }))}
+            placeholder="예: 서울시 강남구 테헤란로 123"
+            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">연락처</label>
+          <p className="mt-0.5 text-xs text-gray-500">위치 옆에 표시됩니다.</p>
+          <input
+            type="text"
+            value={form.venueIntroContact ?? ""}
+            onChange={(e) => setForm((f) => ({ ...f, venueIntroContact: e.target.value }))}
+            placeholder="예: 02-1234-5678"
+            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+          />
+        </div>
       </div>
-      <button type="submit" disabled={loading} className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">
-        저장
-      </button>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="submit" disabled={loading} className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">
+          저장
+        </button>
+        {success && <span className="text-sm text-green-600">저장되었습니다.</span>}
+      </div>
     </form>
   );
 }

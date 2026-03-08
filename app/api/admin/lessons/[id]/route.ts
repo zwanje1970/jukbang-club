@@ -20,16 +20,19 @@ export async function PUT(
         ...(slug != null && { slug }),
         ...(title != null && { title }),
         ...(imageUrl != null && { imageUrl: imageUrl || null }),
-        ...(fee != null && { fee: Number(fee) }),
+        ...(fee != null && { fee: typeof fee === "string" ? fee : String(fee) }),
         ...(period != null && { period }),
         ...(content != null && { content }),
         ...(sortOrder != null && { sortOrder: Number(sortOrder) }),
       },
     });
     return NextResponse.json({ ok: true });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error(e);
-    return NextResponse.json({ error: "수정 실패" }, { status: 500 });
+    const msg = e && typeof e === "object" && "code" in e && (e as { code: string }).code === "P2002"
+      ? "이미 사용 중인 커리큘럼입니다. 다른 커리큘럼을 선택해 주세요."
+      : "수정 실패";
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 

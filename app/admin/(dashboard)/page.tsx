@@ -3,10 +3,11 @@ import Link from "next/link";
 export default function AdminDashboardPage() {
   const links = [
     { href: "/admin/competitions", label: "대회 관리" },
-    { href: "/admin/participants", label: "참가자 관리" },
     { href: "/admin/broadcast", label: "중계 설정" },
     { href: "/admin/lessons", label: "레슨 관리" },
     { href: "/admin/boards", label: "게시판 관리" },
+    { href: "/admin/participants", label: "대회운영(참가자, 대진표)" },
+    { href: "/admin/members", label: "회원관리" },
     { href: "/admin/settings", label: "메인 설정" },
   ];
   return (

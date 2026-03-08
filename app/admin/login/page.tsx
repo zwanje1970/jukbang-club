@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,14 +17,15 @@ export default function AdminLoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password, admin: true }),
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "로그인에 실패했습니다.");
         return;
       }
-      router.push("/admin");
-      router.refresh();
+      window.location.href = "/admin";
+      return;
     } finally {
       setLoading(false);
     }
@@ -46,7 +45,7 @@ export default function AdminLoginPage() {
             <label className="block text-sm font-medium text-gray-700">비밀번호</label>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" required />
           </div>
-          <button type="submit" disabled={loading} className="w-full rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">
+          <button type="submit" disabled={loading} className="w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:opacity-50">
             로그인
           </button>
         </form>

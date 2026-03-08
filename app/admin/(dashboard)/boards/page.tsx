@@ -3,8 +3,11 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
+const ADMIN_BOARD_SLUGS = ["competition-inquiry", "lesson-inquiry"];
+
 async function getBoards() {
   return prisma.board.findMany({
+    where: { slug: { in: ADMIN_BOARD_SLUGS } },
     include: {
       _count: { select: { posts: true } },
     },

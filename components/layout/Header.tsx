@@ -8,21 +8,22 @@ const NAV_PUBLIC = [
   { href: "/", label: "HOME" },
   { href: "/competition", label: "대회안내" },
   { href: "/results", label: "대회결과" },
-  { href: "/lesson", label: "여성당구교실" },
+  { href: "/lesson", label: "당구교실" },
   { href: "/venue", label: "대회당구장 안내" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<{ username: string } | null>(null);
+  const [user, setUser] = useState<{ username: string; role?: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { credentials: "include" })
       .then((r) => r.json())
       .then((d) => setUser(d?.user ?? null))
       .catch(() => setUser(null));
   }, []);
+  const isAdmin = user?.role === "ADMIN";
 
   type NavItem = { href: string; label: string; logout?: boolean };
   const navRight: NavItem[] = user
@@ -44,9 +45,17 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-black text-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-semibold text-amber-400 hover:text-amber-300">
-          죽방클럽 JUKBANG.CLUB
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-1.5 text-lg font-semibold text-amber-400 hover:text-amber-300">
+            <span className="h-4 w-4 shrink-0 rounded-full bg-yellow-400" aria-hidden />
+            <span className="h-4 w-4 shrink-0 rounded-full bg-red-500" aria-hidden />
+            <span className="h-4 w-4 shrink-0 rounded-full bg-white" aria-hidden />
+            죽방클럽
+          </Link>
+          {isAdmin && (
+            <span className="animate-blink text-xs text-red-500 md:text-sm">관리자로 로그인 중입니다.</span>
+          )}
+        </div>
 
         <nav className="hidden md:flex md:items-center md:gap-6">
           {nav.map(({ href, label, logout }) =>

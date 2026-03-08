@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { COMPETITION_TYPES } from "@/types";
+import { formatDateKR } from "@/lib/date";
 
 type Props = {
   initial?: {
@@ -34,6 +35,7 @@ export default function CompetitionForm({ initial, competitionId }: Props) {
     status: initial?.status ?? "open",
   });
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -57,6 +59,7 @@ export default function CompetitionForm({ initial, competitionId }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSuccess(false);
     setLoading(true);
     try {
       const url = competitionId ? `/api/admin/competitions/${competitionId}` : "/api/admin/competitions";
@@ -66,8 +69,11 @@ export default function CompetitionForm({ initial, competitionId }: Props) {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error("저장 실패");
-      router.push("/admin/competitions");
+      setSuccess(true);
       router.refresh();
+      setTimeout(() => {
+        router.push("/admin/competitions");
+      }, 800);
     } finally {
       setLoading(false);
     }
@@ -82,6 +88,7 @@ export default function CompetitionForm({ initial, competitionId }: Props) {
       <div>
         <label className="block text-sm font-medium text-gray-700">날짜</label>
         <input type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" required />
+        {form.date && <p className="mt-1 text-sm text-gray-500">{formatDateKR(form.date)}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">대회 종류</label>
@@ -138,11 +145,14 @@ export default function CompetitionForm({ initial, competitionId }: Props) {
           <label className="block text-sm font-medium text-gray-700">상태</label>
           <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))} className="mt-1 w-full rounded border border-gray-300 px-3 py-2">
             <option value="open">접수중</option>
-            <option value="ended">종료</option>
+            <option value="ended">마감</option>
           </select>
         </div>
       )}
-      <button type="submit" disabled={loading} className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">저장</button>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="submit" disabled={loading} className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">저장</button>
+        {success && <span className="text-sm text-green-600">저장되었습니다.</span>}
+      </div>
     </form>
   );
 }

@@ -18,6 +18,11 @@ export default function YoutubeBroadcast({ tables = [] }: { tables?: Table[] }) 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12">
       <h2 className="mb-6 text-xl font-bold text-gray-800">유튜브 실시간 중계 (6테이블)</h2>
+      {list.length === 0 ? (
+        <p className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-8 text-center text-gray-600">
+          등록된 중계가 없습니다. 관리자 설정에서 중계 테이블을 추가할 수 있습니다.
+        </p>
+      ) : (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((t) => {
           const statusInfo = STATUS_MAP[t.status] ?? STATUS_MAP.WAITING;
@@ -52,6 +57,7 @@ export default function YoutubeBroadcast({ tables = [] }: { tables?: Table[] }) 
           );
         })}
       </div>
+      )}
     </section>
   );
 }

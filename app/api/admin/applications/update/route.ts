@@ -9,7 +9,7 @@ export async function PUT(req: NextRequest) {
   }
   try {
     const body = await req.json();
-    const { applicationId, round, prize } = body;
+    const { applicationId, round, prize, attended } = body;
     if (!applicationId) {
       return NextResponse.json({ error: "applicationId 필요" }, { status: 400 });
     }
@@ -18,6 +18,7 @@ export async function PUT(req: NextRequest) {
       data: {
         ...(round != null && { round: round || null }),
         ...(prize != null && { prize: prize === "" ? null : Number(prize) }),
+        ...(attended !== undefined && { attended: Boolean(attended) }),
       },
     });
     return NextResponse.json({ ok: true });

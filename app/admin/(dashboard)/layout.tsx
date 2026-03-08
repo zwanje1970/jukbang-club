@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardLayout({
   children,
 }: { children: React.ReactNode }) {
@@ -13,10 +15,11 @@ export default async function AdminDashboardLayout({
   const nav = [
     { href: "/admin", label: "대시보드" },
     { href: "/admin/competitions", label: "대회 관리" },
-    { href: "/admin/participants", label: "참가자 관리" },
     { href: "/admin/broadcast", label: "중계 설정" },
     { href: "/admin/lessons", label: "레슨 관리" },
     { href: "/admin/boards", label: "게시판 관리" },
+    { href: "/admin/participants", label: "대회운영(참가자, 대진표)" },
+    { href: "/admin/members", label: "회원관리" },
     { href: "/admin/settings", label: "메인 설정" },
   ];
 

@@ -23,6 +23,7 @@ export default function MainBanner({ imageUrl, title }: Props) {
         className="object-cover"
         priority
         sizes="100vw"
+        unoptimized
       />
       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
         <h1 className="text-2xl font-bold text-white drop-shadow md:text-4xl">{title}</h1>

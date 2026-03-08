@@ -5,7 +5,7 @@ import { verifyPassword, SESSION_COOKIE, getSessionCookieOptions } from "@/lib/a
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { username, password, admin } = body;
+    const { username, password, admin, redirect: redirectTo } = body;
     if (!username || !password) {
       return NextResponse.json({ error: "아이디와 비밀번호를 입력하세요." }, { status: 400 });
     }
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const payload = {
       ok: true,
       user: { id: user.id, username: user.username, name: user.name, role: user.role },
-      redirect: admin ? "/admin" : "/",
+      redirect: admin ? "/admin" : (typeof redirectTo === "string" && redirectTo.startsWith("/") ? redirectTo : "/"),
     };
     const res = NextResponse.json(payload);
     res.cookies.set(SESSION_COOKIE, user.id, getSessionCookieOptions());

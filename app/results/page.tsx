@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 async function getPastCompetitions() {
   return prisma.competition.findMany({
-    where: { status: "ended" },
+    where: { status: { in: ["ended", "closed"] } },
     orderBy: { date: "desc" },
     take: 30,
   });

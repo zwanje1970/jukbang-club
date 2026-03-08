@@ -12,6 +12,7 @@ export default function SignupPage() {
     password: "",
     email: "",
     phone: "",
+    address: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function SignupPage() {
       <h1 className="mb-6 text-2xl font-bold text-gray-800">회원가입</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && <p className="text-sm text-red-600">{error}</p>}
-        {["name", "username", "password", "email", "phone"].map((key) => (
+        {["name", "username", "password", "phone", "email", "address"].map((key) => (
           <div key={key}>
             <label className="block text-sm font-medium text-gray-700">
               {key === "name" && "이름"}
@@ -51,9 +52,12 @@ export default function SignupPage() {
               {key === "password" && "비밀번호"}
               {key === "email" && "이메일"}
               {key === "phone" && "전화번호"}
+              {key === "address" && "주소 (동까지)"}
+              <span className="ml-1 text-red-500">(필수)</span>
             </label>
             <input
               type={key === "password" ? "password" : key === "email" ? "email" : "text"}
+              placeholder={key === "address" ? "예: 서울시 강남구 역삼동" : undefined}
               value={form[key as keyof typeof form]}
               onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
               className="mt-1 w-full rounded border border-gray-300 px-3 py-2"

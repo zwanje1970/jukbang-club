@@ -27,7 +27,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ s
       <dl className="space-y-2 text-gray-700">
         <div>
           <dt className="font-medium">수강료</dt>
-          <dd>{lesson.fee.toLocaleString()}원</dd>
+          <dd>{lesson.fee}</dd>
         </div>
         <div>
           <dt className="font-medium">레슨 기간</dt>

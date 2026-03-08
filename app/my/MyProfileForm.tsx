@@ -12,11 +12,13 @@ export default function MyProfileForm({ user }: { user: User }) {
   const [phone, setPhone] = useState(user.phone);
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setSuccess(false);
     setLoading(true);
     try {
       const res = await fetch("/api/auth/me", {
@@ -31,6 +33,7 @@ export default function MyProfileForm({ user }: { user: User }) {
       }
       router.refresh();
       setNewPassword("");
+      setSuccess(true);
     } finally {
       setLoading(false);
     }
@@ -59,9 +62,12 @@ export default function MyProfileForm({ user }: { user: User }) {
         <label className="block text-sm font-medium text-gray-700">새 비밀번호 (변경 시에만 입력)</label>
         <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" />
       </div>
-      <button type="submit" disabled={loading} className="w-full rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">
-        저장
-      </button>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="submit" disabled={loading} className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700 disabled:opacity-50">
+          저장
+        </button>
+        {success && <span className="text-sm text-green-600">저장되었습니다.</span>}
+      </div>
     </form>
   );
 }

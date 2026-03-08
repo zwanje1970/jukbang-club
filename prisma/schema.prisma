@@ -42,6 +42,7 @@ model User {
   password  String
   email     String
   phone     String
+  address   String   @default("")
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -49,6 +50,19 @@ model User {
   applications    Application[]
   lessonApps      LessonApplication[]
   boardPosts      BoardPost[]
+  notifications   Notification[]
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  message   String    @db.Text
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model SiteSetting {
@@ -68,6 +82,7 @@ model Competition {
   imageUrl        String?
   description     String?         @db.Text
   status          String          @default("open")
+  bracketData     Json?           // 대진표 { rounds, currentRound, finished }
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
@@ -82,8 +97,11 @@ model Application {
   score          String
   recordImageUrl String?
   paidAt         DateTime?
+  rejectedAt     DateTime?
+  rejectionReason String?   @db.Text
   round          RoundType?
   prize          Int?
+  attended       Boolean   @default(true)  // 출석(기본) / 불참 시 대진표 제외
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -100,7 +118,7 @@ model Lesson {
   slug      String   @unique
   title     String
   imageUrl  String?
-  fee       Int
+  fee       String  @default("0")
   period    String
   content   String   @db.Text
   sortOrder Int      @default(0)

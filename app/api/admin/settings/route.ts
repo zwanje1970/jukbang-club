@@ -9,7 +9,16 @@ export async function PUT(req: NextRequest) {
   }
   try {
     const body = await req.json();
+    if (body.competitionOutline !== undefined) {
+      const str = body.competitionOutline == null ? "" : String(body.competitionOutline);
+      await prisma.siteSetting.upsert({
+        where: { key: "competitionOutline" },
+        update: { value: str },
+        create: { key: "competitionOutline", value: str },
+      });
+    }
     for (const [key, value] of Object.entries(body)) {
+      if (key === "competitionOutline") continue;
       const str = value == null ? "" : String(value);
       await prisma.siteSetting.upsert({
         where: { key },

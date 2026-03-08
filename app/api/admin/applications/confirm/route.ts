@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { formatDateKR } from "@/lib/date";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -13,9 +14,20 @@ export async function POST(req: NextRequest) {
     if (!applicationId) {
       return NextResponse.json({ error: "applicationId 필요" }, { status: 400 });
     }
+    const app = await prisma.application.findUnique({
+      where: { id: applicationId },
+      include: { competition: true, user: true },
+    });
+    if (!app) {
+      return NextResponse.json({ error: "신청을 찾을 수 없습니다." }, { status: 404 });
+    }
     await prisma.application.update({
       where: { id: applicationId },
       data: { paidAt: new Date() },
+    });
+    const message = `대회참가 신청완료 되었습니다. ${app.competition.name} ${formatDateKR(app.competition.date)}`;
+    await prisma.notification.create({
+      data: { userId: app.userId, message },
     });
     return NextResponse.json({ ok: true });
   } catch (e) {

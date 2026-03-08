@@ -26,15 +26,19 @@ async function main() {
     });
   }
 
-  await prisma.board.upsert({
-    where: { slug: "competition" },
-    update: {},
-    create: { slug: "competition", name: "시합문의" },
+  // 시합문의·레슨문의 각 1개만 유지 (예전 competition, lesson 보드 제거)
+  await prisma.board.deleteMany({
+    where: { slug: { in: ["competition", "lesson"] } },
   });
   await prisma.board.upsert({
-    where: { slug: "lesson" },
-    update: {},
-    create: { slug: "lesson", name: "레슨문의" },
+    where: { slug: "competition-inquiry" },
+    update: { name: "시합문의" },
+    create: { slug: "competition-inquiry", name: "시합문의" },
+  });
+  await prisma.board.upsert({
+    where: { slug: "lesson-inquiry" },
+    update: { name: "레슨문의" },
+    create: { slug: "lesson-inquiry", name: "레슨문의" },
   });
 
   await prisma.siteSetting.upsert({
@@ -61,6 +65,11 @@ async function main() {
     where: { key: "venueIntroMapAddress" },
     update: {},
     create: { key: "venueIntroMapAddress", value: "" },
+  });
+  await prisma.siteSetting.upsert({
+    where: { key: "competitionOutline" },
+    update: {},
+    create: { key: "competitionOutline", value: "" },
   });
 
   console.log("Seed done. Admin: zwanje / 1010");

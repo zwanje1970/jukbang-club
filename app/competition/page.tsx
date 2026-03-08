@@ -6,11 +6,12 @@ import { formatDateKR } from "@/lib/date";
 export const dynamic = "force-dynamic";
 
 async function getCompetitions() {
+  // Note: include rejected in count until Prisma client has rejectedAt (run: npx prisma generate)
   return prisma.competition.findMany({
     where: { status: "open" },
     orderBy: { date: "asc" },
     take: 20,
-    include: { _count: { select: { applications: true } } },
+    include: { applications: { select: { id: true } } },
   });
 }
 
@@ -22,7 +23,21 @@ export default async function CompetitionPage() {
   const list = await getCompetitions();
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">시합 안내</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-800">대회 안내</h1>
+      <div className="mb-8 flex flex-wrap gap-4">
+        <Link
+          href="/outline"
+          className="inline-flex items-center justify-center rounded-lg border-2 border-amber-500 bg-amber-50 px-6 py-4 text-lg font-semibold text-amber-800 shadow-sm transition hover:bg-amber-100"
+        >
+          대회요강
+        </Link>
+        <Link
+          href="/board/competition-inquiry"
+          className="inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-6 py-4 text-lg font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50"
+        >
+          시합문의
+        </Link>
+      </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((c) => (
           <Link
@@ -39,7 +54,7 @@ export default async function CompetitionPage() {
               <h2 className="font-semibold text-gray-800">{c.name}</h2>
               <p className="mt-1 text-sm text-amber-600">{typeLabel(c.type)}</p>
               <p className="mt-1 text-sm text-gray-600">{formatDateKR(c.date)}</p>
-              <p className="mt-2 text-sm font-medium text-gray-700">현재 신청 {c._count.applications}/{c.maxParticipants}명</p>
+              <p className="mt-2 text-sm font-medium text-gray-700">현재 신청 {c.applications.length}/{c.maxParticipants}명</p>
             </div>
           </Link>
         ))}

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
 import { COMPETITION_TYPES } from "@/types";
 import { formatDateKR } from "@/lib/date";
 
@@ -10,7 +9,10 @@ export const dynamic = "force-dynamic";
 async function getCompetition(id: string) {
   return prisma.competition.findUnique({
     where: { id },
-    include: { _count: { select: { applications: true } } },
+    include: {
+      // Filter rejected in memory until Prisma client is regenerated (where: { rejectedAt: null })
+      applications: { select: { id: true } },
+    },
   });
 }
 
@@ -24,9 +26,8 @@ export default async function CompetitionDetailPage({ params }: { params: Promis
   const [competition, bankHtml] = await Promise.all([getCompetition(id), getBankAccount()]);
   if (!competition) notFound();
 
-  const session = await getSession();
   const typeLabel = COMPETITION_TYPES.find((t) => t.value === competition.type)?.label ?? competition.type;
-  const applicationCount = competition._count.applications;
+  const applicationCount = competition.applications.length;
   const expectedPrize = competition.entryFee * applicationCount - competition.operatingFee * applicationCount;
 
   return (
@@ -77,7 +78,7 @@ export default async function CompetitionDetailPage({ params }: { params: Promis
         </div>
       )}
       <div className="mt-8">
-        {session ? (
+        {competition.status === "open" ? (
           <Link
             href={`/apply/${competition.id}`}
             className="inline-block rounded bg-amber-600 px-6 py-3 font-medium text-white hover:bg-amber-700"
@@ -85,7 +86,7 @@ export default async function CompetitionDetailPage({ params }: { params: Promis
             참가 신청
           </Link>
         ) : (
-          <p className="text-gray-600">참가 신청은 로그인 후 가능합니다.</p>
+          <p className="text-gray-600">신청이 마감되었습니다.</p>
         )}
       </div>
     </div>

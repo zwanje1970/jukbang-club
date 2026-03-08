@@ -4,7 +4,10 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 async function getLessons() {
-  return prisma.lesson.findMany({ orderBy: { sortOrder: "asc" } });
+  return prisma.lesson.findMany({
+    orderBy: { sortOrder: "asc" },
+    include: { _count: { select: { applications: true } } },
+  });
 }
 
 export default async function AdminLessonsPage() {
@@ -20,9 +23,10 @@ export default async function AdminLessonsPage() {
           <li key={l.id}>
             <Link
               href={`/admin/lessons/${l.id}`}
-              className="block rounded-lg border border-gray-200 bg-white px-4 py-3 hover:bg-gray-50"
+              className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 hover:bg-gray-50"
             >
-              {l.title} · {l.slug} · {l.fee.toLocaleString()}원
+              <span>{l.title} · {l.slug} · {l.fee}</span>
+              <span className="text-gray-500 text-sm">현인원 : {l._count.applications}명</span>
             </Link>
           </li>
         ))}
