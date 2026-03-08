@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -49,7 +50,9 @@ export async function PUT(
     }
     await prisma.competition.update({
       where: { id: competitionId },
-      data: { bracketData: { rounds, currentRound, finished } },
+      data: {
+        bracketData: { rounds, currentRound, finished } as Prisma.InputJsonValue,
+      },
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
