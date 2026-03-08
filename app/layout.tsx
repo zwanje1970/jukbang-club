@@ -1,7 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LayoutContent from "@/components/LayoutContent";
+
+const naverMapClientId = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID;
+const naverMapScriptUrl =
+  naverMapClientId &&
+  `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${naverMapClientId}&submodules=geocoder`;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +39,9 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col bg-white text-gray-900 antialiased`}>
+        {naverMapScriptUrl && (
+          <Script src={naverMapScriptUrl} strategy="afterInteractive" />
+        )}
         <LayoutContent>{children}</LayoutContent>
       </body>
     </html>

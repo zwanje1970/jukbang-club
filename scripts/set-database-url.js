@@ -1,30 +1,15 @@
 /**
- * For Vercel (or any env that only has DB_HOST, DB_USER, etc.):
- * Build DATABASE_URL from separate vars so Prisma can use it.
- * If DATABASE_URL is already set, this is a no-op.
- * Run before prisma generate / next build.
+ * Vercel 등: DATABASE_URL이 이미 설정되어 있으면 그대로 Prisma generate + Next build 실행.
+ * DATABASE_URL이 없으면 경고만 출력하고 빌드 진행 (Prisma는 나중에 런타임에서 실패).
  */
 const { execSync } = require("child_process");
 
 function main() {
-  if (process.env.DATABASE_URL) {
-    // Already set (e.g. single env var in Vercel)
-    runBuild();
-    return;
-  }
-
-  const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } = process.env;
-  if (!DB_HOST || !DB_USER || !DB_NAME) {
+  if (!process.env.DATABASE_URL) {
     console.warn(
-      "scripts/set-database-url.js: DATABASE_URL not set and DB_HOST/DB_USER/DB_NAME missing. Prisma may fail."
+      "scripts/set-database-url.js: DATABASE_URL이 설정되지 않았습니다. Neon 등에서 postgresql URL을 설정하세요."
     );
-    runBuild();
-    return;
   }
-
-  const port = DB_PORT || "3306";
-  const password = DB_PASSWORD != null ? encodeURIComponent(DB_PASSWORD) : "";
-  process.env.DATABASE_URL = `mysql://${DB_USER}:${password}@${DB_HOST}:${port}/${DB_NAME}`;
   runBuild();
 }
 

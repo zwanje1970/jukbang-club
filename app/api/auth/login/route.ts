@@ -97,11 +97,12 @@ export async function POST(req: NextRequest) {
     logLoginError("로그인 처리 중 예외", e);
     const err = e instanceof Error ? e : new Error(String(e));
     const detail = err.message || String(e);
+    const isDev = process.env.NODE_ENV !== "production";
     return NextResponse.json(
       {
         error: "로그인 처리 중 오류가 발생했습니다.",
         code: "SERVER_ERROR",
-        detail,
+        ...(isDev && { detail }),
       },
       { status: 500 }
     );

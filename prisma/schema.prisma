@@ -1,12 +1,11 @@
-// JUKBANG.CLUB - MySQL + Prisma
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+// JUKBANG.CLUB - Neon PostgreSQL + Prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
 }
 
 enum UserRole {

@@ -21,7 +21,8 @@ export default function AdminLoginPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "로그인에 실패했습니다.");
+        const message = data.error || "로그인에 실패했습니다.";
+        setError(data.detail ? `${message}\n(${data.detail})` : message);
         return;
       }
       if (typeof window !== "undefined") window.location.href = "/admin";
