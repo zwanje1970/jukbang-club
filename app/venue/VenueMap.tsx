@@ -50,7 +50,6 @@ export default function VenueMap({ address, lat, lng, name }: VenueMapProps) {
       const map = new nm.Map(containerRef.current!, {
         center,
         zoom: 16,
-        zoomControl: true,
       });
       new nm.Marker({
         position: center,
