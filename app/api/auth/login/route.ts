@@ -41,13 +41,27 @@ export async function POST(req: NextRequest) {
   const configError = getDbConfigError();
   if (configError) return configError;
 
-  const conn = await checkDatabaseConnection();
+  const CONNECTION_TIMEOUT_MS = 5000;
+  const conn = await Promise.race([
+    checkDatabaseConnection(),
+    new Promise<{ ok: false; error: string }>((resolve) =>
+      setTimeout(() => resolve({ ok: false, error: "Database Connection Timeout" }), CONNECTION_TIMEOUT_MS)
+    ),
+  ]);
+
   if (!conn.ok) {
-    logLoginError("DB 연결 실패", new Error(conn.error));
+    const isTimeout = conn.error === "Database Connection Timeout";
+    if (isTimeout) {
+      console.error("[api/auth/login] DB 연결 시간 초과 (5초)");
+    } else {
+      logLoginError("DB 연결 실패", new Error(conn.error));
+    }
     return NextResponse.json(
       {
-        error: "데이터베이스에 연결할 수 없습니다. (연결 시간 초과 또는 호스트 설정을 확인해 주세요.)",
-        code: "DB_CONNECT",
+        error: isTimeout
+          ? "데이터베이스 연결 시간이 초과되었습니다. (Database Connection Timeout)"
+          : "데이터베이스에 연결할 수 없습니다. (연결 시간 초과 또는 호스트 설정을 확인해 주세요.)",
+        code: isTimeout ? "DB_TIMEOUT" : "DB_CONNECT",
         detail: conn.error,
       },
       { status: 503 }
