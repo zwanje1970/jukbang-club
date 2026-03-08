@@ -41,7 +41,8 @@ export async function POST(req: NextRequest) {
   const configError = getDbConfigError();
   if (configError) return configError;
 
-  const CONNECTION_TIMEOUT_MS = 5000;
+  // Neon 등: 슬립에서 깨어날 때 첫 연결이 5초 넘을 수 있음
+  const CONNECTION_TIMEOUT_MS = 15000;
   const conn = await Promise.race([
     checkDatabaseConnection(),
     new Promise<{ ok: false; error: string }>((resolve) =>
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
   if (!conn.ok) {
     const isTimeout = conn.error === "Database Connection Timeout";
     if (isTimeout) {
-      console.error("[api/auth/login] DB 연결 시간 초과 (5초)");
+      console.error("[api/auth/login] DB 연결 시간 초과 (15초)");
     } else {
       logLoginError("DB 연결 실패", new Error(conn.error));
     }
