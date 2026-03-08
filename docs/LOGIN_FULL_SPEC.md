@@ -8,8 +8,7 @@
 
 `.env` (실제 값은 저장소에 올리지 말 것):
 
-- `DATABASE_URL` = PlanetScale 또는 로컬 MySQL URL
-- 또는: `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT` (필요 시 조합해 `DATABASE_URL` 구성)
+- `DATABASE_URL` = Neon PostgreSQL 연결 URL (예: `postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require`)
 
 ---
 
@@ -173,7 +172,7 @@ export default prisma;
 1. 위 코드를 **Cursor에 붙여넣기** 후 파일 생성
 2. 설치: `npm install @prisma/client bcryptjs` (이미 있으면 생략)
 3. 타입: `npm install --save-dev @types/bcryptjs`
-4. DB: `npx prisma db push` (PlanetScale 등)
+4. DB: `npx prisma db push` (Neon 등)
 5. 빌드 후 로그인 폼 테스트: `npm run build` → `npm run dev`
 
 ---
@@ -181,7 +180,7 @@ export default prisma;
 ## ✅ 요약
 
 - 비밀번호 암호화 (bcrypt)
-- Prisma + PlanetScale 대응
+- Prisma + Neon PostgreSQL 대응
 - Next.js App Router + TypeScript
 - Cursor에서 붙여넣기로 생성 가능
 

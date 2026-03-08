@@ -4,17 +4,17 @@
 
 ## 방법 1: DB 관리 도구에서 지정 (권장)
 
-1. MySQL 클라이언트(Prisma Studio, phpMyAdmin, MySQL Workbench 등)에서 **User** 테이블 열기
+1. DB 클라이언트(Prisma Studio, Neon SQL Editor 등)에서 **User** 테이블 열기
 2. `npx prisma studio` 로 Prisma Studio 실행 후 **User** 테이블에서 role 수정 가능
 3. 관리자로 쓸 계정 행에서 **role** 값을 **USER** → **ADMIN**으로 변경 후 저장
 4. 해당 **아이디/비밀번호**로 `/admin/login`에서 로그인
 
 ## 방법 2: SQL로 지정
 
-1. MySQL에서 아래 SQL 실행 (`'내아이디'`를 실제 **username**으로 변경):
+1. PostgreSQL(Neon SQL Editor 등)에서 아래 SQL 실행 (`'내아이디'`를 실제 **username**으로 변경):
 
 ```sql
-UPDATE User SET role = 'ADMIN' WHERE username = '내아이디';
+UPDATE "User" SET role = 'ADMIN' WHERE username = '내아이디';
 ```
 
 2. 해당 아이디/비밀번호로 `/admin/login` 접속

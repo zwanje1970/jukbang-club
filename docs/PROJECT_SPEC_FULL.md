@@ -1,6 +1,6 @@
 # 죽방클럽 홈페이지 FULL 생성 스펙
 
-**Next.js + TypeScript + 관리자 + 회원 + 대회 + 대진표 + 레슨 + PlanetScale MySQL + 네이버 지도 + Vercel**
+**Next.js + TypeScript + 관리자 + 회원 + 대회 + 대진표 + 레슨 + Neon PostgreSQL + 네이버 지도 + Vercel**
 
 > Cursor에서 붙여넣기만 하면 모든 구조 생성 가능
 
@@ -20,25 +20,19 @@
 
 | 변수 | 설명 | 예시 |
 |------|------|------|
-| `DATABASE_URL` | Prisma/PlanetScale 연결 URL | PlanetScale Connect 문자열 또는 `mysql://...` |
-| `DB_HOST` | MySQL 호스트 (선택) | PlanetScale 호스트 등 |
-| `DB_USER` | DB 사용자 | `jukbanguser` |
-| `DB_PASSWORD` | DB 비밀번호 | (보안상 .env에만) |
-| `DB_NAME` | DB 이름 | `jukbangclub` |
-| `DB_PORT` | 포트 | `3306` |
-| `NAVER_MAP_KEY` / `NAVER_MAP_CLIENT_ID` | 네이버 지도 API | (네이버 개발자센터 발급) |
+| `DATABASE_URL` | Prisma/Neon 연결 URL | `postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require` (Neon Pooled connection) |
+| `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID` | 네이버 지도 API | (네이버 클라우드 플랫폼 발급) |
 
 ---
 
-## 3️⃣ Prisma 설정 (PlanetScale 대응)
+## 3️⃣ Prisma 설정 (Neon PostgreSQL)
 
-- `prisma/schema.prisma` 상단 **datasource** 수정:
+- `prisma/schema.prisma` 상단 **datasource**:
 
 ```prisma
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"   // ⚡ 서버리스 MySQL 대응
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 ```
 
@@ -55,7 +49,7 @@ model User {
 }
 ```
 
-- migration 대신 **`npx prisma db push`** 사용 (PlanetScale 권장)
+- migration 대신 **`npx prisma db push`** 사용 (Neon 권장)
 
 ---
 
@@ -152,6 +146,6 @@ git push -u origin main
 - **TypeScript용 CSS 선언** 추가 (globals.d.ts)
 - **ReactQuill 이미지 핸들러** 테스트 포함
 - **Cursor에서 붙여넣기만 하면** 모든 구조 생성 가능
-- **PlanetScale 서버리스 MySQL + Vercel 배포 대응 완료** (relationMode, db push)
+- **Neon PostgreSQL + Vercel 배포 대응** (DATABASE_URL, db push)
 
 - 비밀번호·API 키는 .env에만 두고 저장소에 커밋하지 않기
