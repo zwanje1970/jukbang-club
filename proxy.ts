@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
  * Redirect to lowercase path when the request path contains uppercase letters.
  * Prevents 404 on case-sensitive systems (Linux/Vercel) when links or URLs use wrong case.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const lower = pathname.toLowerCase();
   if (pathname !== lower) {
