@@ -12,7 +12,7 @@ export default async function MyEditPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.id },
-    select: { name: true, username: true, email: true, phone: true },
+    select: { name: true, username: true, email: true, phone: true, address: true },
   });
   if (!user) redirect("/login");
 

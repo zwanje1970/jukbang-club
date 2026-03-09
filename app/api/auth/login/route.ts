@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     const rawPassword = body.password ?? "";
     const username = typeof rawUsername === "string" ? rawUsername.trim() : "";
     const password = typeof rawPassword === "string" ? rawPassword : "";
-    const { admin, redirect: redirectTo } = body;
+    const { admin, redirect: redirectTo, remember } = body;
     if (!username || !password) {
       return NextResponse.json({ error: "아이디와 비밀번호를 입력하세요." }, { status: 400 });
     }
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
       redirect: admin ? "/admin" : (typeof redirectTo === "string" && redirectTo.startsWith("/") ? redirectTo : "/"),
     };
     const res = NextResponse.json(payload);
-    res.cookies.set(SESSION_COOKIE, user.id, getSessionCookieOptions());
+    res.cookies.set(SESSION_COOKIE, user.id, getSessionCookieOptions(remember === true));
     return res;
   } catch (e) {
     logLoginError("로그인 처리 중 예외", e);

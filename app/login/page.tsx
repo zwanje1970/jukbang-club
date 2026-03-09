@@ -1,18 +1,83 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+
+const REMEMBER_KEY = "jukbang_login_remember";
+const AUTO_LOGIN_KEY = "jukbang_auto_login";
+
+function loadAutoLogin(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    const v = localStorage.getItem(AUTO_LOGIN_KEY);
+    if (v === null) return true;
+    return v === "1";
+  } catch {
+    return true;
+  }
+}
+
+function saveAutoLogin(value: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(AUTO_LOGIN_KEY, value ? "1" : "0");
+  } catch {
+    // ignore
+  }
+}
+
+function loadRemembered() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(REMEMBER_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as { username?: string; password?: string };
+    return { username: data.username ?? "", password: data.password ?? "" };
+  } catch {
+    return null;
+  }
+}
+
+function saveRemembered(username: string, password: string) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(REMEMBER_KEY, JSON.stringify({ username, password }));
+  } catch {
+    // ignore
+  }
+}
+
+function clearRemembered() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(REMEMBER_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") ?? "";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [autoLogin, setAutoLogin] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const signupSectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    setAutoLogin(loadAutoLogin());
+    const saved = loadRemembered();
+    if (saved && (saved.username || saved.password)) {
+      setUsername(saved.username);
+      setPassword(saved.password);
+      setRemember(true);
+    }
+  }, []);
 
   const [signupForm, setSignupForm] = useState({
     name: "",
@@ -34,7 +99,12 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, redirect: redirectTo || undefined }),
+        body: JSON.stringify({
+          username,
+          password,
+          redirect: redirectTo || undefined,
+          remember: autoLogin,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -60,7 +130,12 @@ export default function LoginPage() {
         }
         return;
       }
-      if (typeof window !== "undefined") window.location.href = data.redirect || "/";
+      if (typeof window !== "undefined") {
+        if (remember) saveRemembered(username, password);
+        else clearRemembered();
+        saveAutoLogin(autoLogin);
+        window.location.href = data.redirect || "/";
+      }
     } finally {
       setLoading(false);
     }
@@ -126,6 +201,26 @@ export default function LoginPage() {
               className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
               required
             />
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-700">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+              />
+              <span>아이디/비밀번호 기억</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={autoLogin}
+                onChange={(e) => setAutoLogin(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+              />
+              <span>자동로그인</span>
+            </label>
           </div>
           <div className="flex flex-wrap gap-2">
             <button

@@ -11,7 +11,11 @@ export default async function MyPage() {
   const session = await getSession();
   if (!session) redirect("/login");
 
-  const [applications, boardPosts] = await Promise.all([
+  const [user, applications, boardPosts] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.id },
+      select: { name: true, username: true, email: true, phone: true, address: true },
+    }),
     prisma.application.findMany({
       where: { userId: session.id },
       include: { competition: { select: { name: true, date: true } } },
@@ -34,9 +38,12 @@ export default async function MyPage() {
       </Link>
       <h1 className="mb-6 text-2xl font-bold text-gray-800">마이페이지</h1>
       <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-4">
-        <div className="flex flex-wrap gap-6">
-          <p className="text-gray-800">{session.name}</p>
-          <p className="text-gray-800">{session.username}</p>
+        <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-800">
+          <span><strong>이름</strong> {user?.name ?? session.name}</span>
+          <span><strong>아이디</strong> {session.username}</span>
+          {user?.email && <span><strong>이메일</strong> {user.email}</span>}
+          {user?.phone && <span><strong>전화</strong> {user.phone}</span>}
+          {user?.address && <span><strong>주소</strong> {user.address}</span>}
         </div>
       </div>
 

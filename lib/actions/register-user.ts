@@ -1,7 +1,7 @@
 "use server";
 
 import { put } from "@vercel/blob";
-import { createPool } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import { nanoid } from "nanoid";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
@@ -51,15 +51,11 @@ export async function registerUser(
     const blob = await put(pathname, file, { access: "public" });
     const profileUrl = blob.url;
 
-    const pool = createPool({ connectionString });
-    await pool.sql`
+    const sql = neon(connectionString);
+    await sql`
       INSERT INTO users (name, score, profile_url)
       VALUES (${name}, ${score}, ${profileUrl})
     `;
-
-    if (typeof (pool as unknown as { end?: () => Promise<void> }).end === "function") {
-      await (pool as unknown as { end: () => Promise<void> }).end();
-    }
 
     return { success: true };
   } catch (e) {

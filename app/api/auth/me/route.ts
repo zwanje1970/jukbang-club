@@ -18,11 +18,12 @@ export async function PUT(req: NextRequest) {
   }
   try {
     const body = await req.json();
-    const { name, email, phone, newPassword } = body;
-    const data: { name?: string; email?: string; phone?: string; password?: string } = {};
+    const { name, email, phone, address, newPassword } = body;
+    const data: { name?: string; email?: string; phone?: string; address?: string; password?: string } = {};
     if (name != null) data.name = name;
     if (email != null) data.email = email;
     if (phone != null) data.phone = phone;
+    if (address !== undefined) data.address = address;
     if (newPassword) data.password = await hashPassword(newPassword);
     await prisma.user.update({
       where: { id: session.id },

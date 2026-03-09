@@ -11,6 +11,7 @@ export const routes = {
   lesson: "/lesson",
   lessonSlug: (slug: string) => `/lesson/${(slug || "").toLowerCase()}`,
   venue: "/venue",
+  boardFree: "/board/free",
   outline: "/outline",
   board: (slug: string) => `/board/${(slug || "").toLowerCase()}`,
   boardCompetitionInquiry: "/board/competition-inquiry",
@@ -42,5 +43,6 @@ export const routes = {
   adminMembersId: (id: string) => `/admin/members/${id}`,
   adminBroadcast: "/admin/broadcast",
   adminSettings: "/admin/settings",
+  adminAccount: "/admin/account",
   notificationsPopup: "/notifications-popup",
 } as const;

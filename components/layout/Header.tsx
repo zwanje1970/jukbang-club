@@ -12,6 +12,7 @@ const NAV_PUBLIC = [
   { href: routes.results, label: "대회결과" },
   { href: routes.lesson, label: "당구교실" },
   { href: routes.venue, label: "당구장안내" },
+  { href: routes.boardFree, label: "자유게시판" },
 ];
 
 export default function Header() {
@@ -20,12 +21,15 @@ export default function Header() {
   const [user, setUser] = useState<{ username: string; role?: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "include" })
+    fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
       .then((r) => r.json())
-      .then((d) => setUser(d?.user ?? null))
+      .then((d) => {
+        const u = d?.user ?? null;
+        setUser(u ? { username: u.username, role: u.role } : null);
+      })
       .catch(() => setUser(null));
-  }, []);
-  const isAdmin = user?.role === "ADMIN";
+  }, [pathname]);
+  const isAdmin = (user?.role?.toString().toUpperCase() ?? "") === "ADMIN";
 
   type NavItem = { href: string; label: string; logout?: boolean; iconOnly?: boolean };
   const navRight: NavItem[] = user
@@ -53,6 +57,14 @@ export default function Header() {
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
     if (typeof window !== "undefined") window.location.href = routes.home;
+  }
+
+  function handleExit() {
+    if (typeof window === "undefined") return;
+    if (!window.confirm("사이트를 종료하시겠습니까?")) return;
+    window.close();
+    // 스크립트로 연 창이 아니면 close()가 동작하지 않을 수 있음
+    if (!window.closed) window.location.href = "about:blank";
   }
 
   /** 현재 경로가 이 메뉴에 해당하는지 (하위 경로 포함) */
@@ -109,11 +121,16 @@ export default function Header() {
                   href={href}
                   aria-label={iconOnly ? label : undefined}
                   aria-current={isActiveNav(href) ? "page" : undefined}
-                  className={`inline-flex items-center text-sm font-medium transition hover:text-amber-400 ${
-                    isActiveNav(href) ? "text-amber-400" : "text-white"
+                  className={`inline-flex items-center gap-1.5 text-sm font-medium transition ${
+                    iconOnly
+                      ? "text-blue-500 hover:text-blue-400"
+                      : isActiveNav(href)
+                        ? "text-amber-400 hover:text-amber-400"
+                        : "text-white hover:text-amber-400"
                   }`}
                 >
-                  {iconOnly ? <AdminIcon /> : label}
+                  {iconOnly ? <AdminIcon /> : null}
+                  <span>{iconOnly ? "관리자" : label}</span>
                 </Link>
               )
             )}
@@ -123,8 +140,8 @@ export default function Header() {
               href={routes.admin}
               aria-label="관리자"
               aria-current={isActiveNav(routes.admin) ? "page" : undefined}
-              className={`md:hidden flex shrink-0 items-center gap-1 rounded p-2 text-white hover:bg-white/10 ${
-                isActiveNav(routes.admin) ? "text-amber-400" : ""
+              className={`md:hidden flex shrink-0 items-center gap-1.5 rounded p-2 text-blue-500 hover:bg-white/10 hover:text-blue-400 ${
+                isActiveNav(routes.admin) ? "text-blue-400" : ""
               }`}
             >
               <AdminIcon mobile />
@@ -168,6 +185,15 @@ export default function Header() {
               )}
             </Fragment>
           ))}
+          <span className="select-none px-0.5 text-white/40">|</span>
+          <button
+            type="button"
+            onClick={handleExit}
+            className="text-xs text-white hover:text-amber-400"
+            aria-label="사이트 종료"
+          >
+            나가기
+          </button>
         </nav>
       </div>
 
@@ -189,8 +215,12 @@ export default function Header() {
                 href={href}
                 aria-label={iconOnly ? label : undefined}
                 aria-current={isActiveNav(href) ? "page" : undefined}
-                className={`flex items-center gap-2 py-2 text-sm hover:text-amber-400 ${
-                  isActiveNav(href) ? "font-bold text-amber-400" : "text-white"
+                className={`flex items-center gap-2 py-2 text-sm ${
+                  iconOnly
+                    ? "text-blue-500 hover:text-blue-400"
+                    : isActiveNav(href)
+                      ? "font-bold text-amber-400 hover:text-amber-400"
+                      : "text-white hover:text-amber-400"
                 }`}
                 onClick={() => setOpen(false)}
               >
@@ -199,6 +229,13 @@ export default function Header() {
               </Link>
             )
           )}
+          <button
+            type="button"
+            onClick={() => { setOpen(false); handleExit(); }}
+            className="block w-full py-2 text-left text-sm text-white hover:text-amber-400 border-t border-white/20 mt-2 pt-2"
+          >
+            나가기
+          </button>
         </div>
       )}
     </header>

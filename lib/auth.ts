@@ -3,17 +3,21 @@ import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
 export const SESSION_COOKIE = "jukbang_session";
-// 로그아웃 전까지 유지 (1년)
+// 자동로그인 시: 1년
 const SESSION_MAX_AGE = 60 * 60 * 24 * 365;
 
-export function getSessionCookieOptions() {
-  return {
+export function getSessionCookieOptions(remember?: boolean) {
+  const base = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
-    maxAge: SESSION_MAX_AGE,
     path: "/",
   };
+  // 자동로그인 선택 시에만 장기 유지; 미선택 시 세션 쿠키(브라우저 종료 시 로그아웃)
+  if (remember !== false) {
+    return { ...base, maxAge: SESSION_MAX_AGE };
+  }
+  return base;
 }
 
 export async function hashPassword(password: string): Promise<string> {

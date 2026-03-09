@@ -1,5 +1,5 @@
 /**
- * Vercel Postgres / Neon 등 PostgreSQL에 'users' 테이블을 생성하는 스크립트.
+ * Neon / PostgreSQL에 'users' 테이블을 생성하는 스크립트.
  * 컬럼: id, name, score, profile_url
  *
  * 실행: npx tsx scripts/create-users-table.ts
@@ -7,7 +7,7 @@
  */
 
 import "dotenv/config";
-import { createPool } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 
 async function main() {
   const connectionString =
@@ -24,10 +24,10 @@ async function main() {
     process.exit(1);
   }
 
-  const pool = createPool({ connectionString });
+  const sql = neon(connectionString);
 
   try {
-    await pool.sql`
+    await sql`
       CREATE TABLE IF NOT EXISTS users (
         id          SERIAL PRIMARY KEY,
         name        TEXT,
@@ -39,10 +39,6 @@ async function main() {
   } catch (e) {
     console.error("테이블 생성 실패:", e);
     process.exit(1);
-  } finally {
-    if (typeof (pool as unknown as { end?: () => Promise<void> }).end === "function") {
-      await (pool as unknown as { end: () => Promise<void> }).end();
-    }
   }
 }
 

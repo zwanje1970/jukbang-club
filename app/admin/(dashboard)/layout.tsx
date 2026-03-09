@@ -23,6 +23,7 @@ export default async function AdminDashboardLayout({
     { href: routes.adminParticipants, label: "대회운영(참가자/대진표)" },
     { href: routes.adminMembers, label: "회원관리" },
     { href: routes.adminSettings, label: "메인설정" },
+    { href: routes.adminAccount, label: "관리자 계정" },
   ];
 
   const logoutHref = `/api/auth/logout?next=${encodeURIComponent(routes.adminLogin)}`;

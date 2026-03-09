@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 const BOARD_DEFAULTS: Record<string, string> = {
   "competition-inquiry": "시합문의",
   "lesson-inquiry": "레슨문의",
+  free: "자유게시판",
 };
 
 const HIDE_LIST_SLUGS = new Set(["competition-inquiry", "lesson-inquiry"]);
