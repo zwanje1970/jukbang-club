@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import TournamentFileUpload from "@/components/TournamentFileUpload";
 
 type User = { name: string; username: string; phone: string };
 
@@ -14,26 +15,6 @@ export default function ApplyForm({ competitionId, user }: { competitionId: stri
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-
-  async function handleRecordImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "업로드 실패");
-      setRecordImageUrl(data.url);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "업로드 실패");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
-    }
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -105,17 +86,10 @@ export default function ApplyForm({ competitionId, user }: { competitionId: stri
         <input type="text" value={score} onChange={(e) => setScore(e.target.value)} className="mt-1 w-full rounded border border-gray-300 px-3 py-2" required />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">경기 기록 이미지 (선택)</label>
-        <div className="mt-1 flex items-center gap-4">
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/gif,image/webp"
-            onChange={handleRecordImageChange}
-            disabled={uploading}
-            className="rounded border border-gray-300 px-3 py-2 text-sm file:mr-2 file:rounded file:border-0 file:bg-amber-100 file:px-3 file:py-1 file:text-amber-800"
-          />
-          {uploading && <span className="text-sm text-gray-500">업로드 중...</span>}
-        </div>
+        <TournamentFileUpload
+          label="경기 기록 이미지 (선택)"
+          onUploadComplete={(url) => setRecordImageUrl(url)}
+        />
         {recordImageUrl && (
           <div className="mt-2 relative h-24 w-32 overflow-hidden rounded border border-gray-200">
             <Image src={recordImageUrl} alt="경기 기록" fill className="object-cover" sizes="128px" />

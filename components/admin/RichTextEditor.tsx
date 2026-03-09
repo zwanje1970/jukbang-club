@@ -36,15 +36,14 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || "업로드 실패");
+      const { uploadFile } = await import("@/lib/actions/upload-file");
+      const result = await uploadFile(file, "board");
+      if (result.error) {
+        alert(result.error);
         return;
       }
-      const url = data.url;
+      const url = result.url;
+      if (!url) return;
       const quill = quillRef.current?.getEditor?.();
       if (quill) {
         const range = quill.getSelection();

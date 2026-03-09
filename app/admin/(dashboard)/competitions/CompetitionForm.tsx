@@ -43,12 +43,10 @@ export default function CompetitionForm({ initial, competitionId }: Props) {
     if (!file) return;
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "업로드 실패");
-      setForm((f) => ({ ...f, imageUrl: data.url }));
+      const { uploadFile } = await import("@/lib/actions/upload-file");
+      const result = await uploadFile(file, "competition");
+      if (result.error) throw new Error(result.error);
+      if (result.url) setForm((f) => ({ ...f, imageUrl: result.url! }));
     } catch (err) {
       alert(err instanceof Error ? err.message : "업로드 실패");
     } finally {

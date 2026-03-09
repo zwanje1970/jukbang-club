@@ -21,14 +21,10 @@ export default function BlobImageUpload() {
     setUploading(true);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/blob-upload", { method: "POST", body: formData });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        throw new Error(data.error || "업로드 실패");
-      }
-      setUrl(data.url);
+      const { uploadFile } = await import("@/lib/actions/upload-file");
+      const result = await uploadFile(file, "broadcast");
+      if (result.error) throw new Error(result.error);
+      if (result.url) setUrl(result.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "업로드 실패");
     } finally {

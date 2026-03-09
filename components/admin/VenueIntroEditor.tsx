@@ -107,12 +107,10 @@ const VenueIntroEditor = forwardRef<VenueIntroEditorRef, VenueIntroEditorProps>(
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) return alert(data.error || "업로드 실패");
-      insertImageAtCursor(data.url);
+      const { uploadFile } = await import("@/lib/actions/upload-file");
+      const result = await uploadFile(file, "venue");
+      if (result.error) return alert(result.error);
+      if (result.url) insertImageAtCursor(result.url);
     };
     input.click();
   }, [insertImageAtCursor]);

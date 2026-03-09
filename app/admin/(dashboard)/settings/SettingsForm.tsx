@@ -40,12 +40,10 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
     if (!file) return;
     setBannerUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "업로드 실패");
-      setForm((f) => ({ ...f, mainBannerUrl: data.url }));
+      const { uploadFile } = await import("@/lib/actions/upload-file");
+      const result = await uploadFile(file, "settings");
+      if (result.error) throw new Error(result.error);
+      if (result.url) setForm((f) => ({ ...f, mainBannerUrl: result.url! }));
     } catch (err) {
       alert(err instanceof Error ? err.message : "업로드 실패");
     } finally {

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdminFloatButton from "@/components/layout/AdminFloatButton";
+import MobileSwipeWrapper from "@/components/MobileSwipeWrapper";
 import NotificationBanner from "@/components/NotificationBanner";
 import IntroScreen from "@/components/IntroScreen";
 import { REPLAY_INTRO_EVENT } from "@/components/IntroScreen";
@@ -41,10 +42,12 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {showIntro === true && <IntroScreen onEnd={endIntro} />}
       <Header />
       <NotificationBanner />
-      <main className="flex-1 w-full bg-white">
-        <div className="main-container max-w-7xl mx-auto px-4 w-full">
-          {children}
-        </div>
+      <main className="flex-1 w-full bg-white flex flex-col">
+        <MobileSwipeWrapper>
+          <div className="main-container max-w-7xl mx-auto px-4 w-full">
+            {children}
+          </div>
+        </MobileSwipeWrapper>
       </main>
       <Footer />
       <AdminFloatButton />
