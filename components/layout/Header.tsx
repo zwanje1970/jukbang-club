@@ -187,14 +187,16 @@ export default function Header() {
               </Fragment>
             ))}
           </div>
-          <button
-            type="button"
-            onClick={handleExit}
-            className="shrink-0 text-xs text-white hover:text-amber-400"
-            aria-label="사이트 종료"
-          >
-            나가기
-          </button>
+          <div className="shrink-0 rounded border border-white/40 bg-white/5 px-3 py-1.5">
+            <button
+              type="button"
+              onClick={handleExit}
+              className="text-xs text-white hover:text-amber-400"
+              aria-label="사이트 종료"
+            >
+              나가기
+            </button>
+          </div>
         </nav>
       </div>
 

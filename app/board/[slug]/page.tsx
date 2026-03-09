@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { routes } from "@/lib/routes";
 import { formatDateTimeKR } from "@/lib/date";
 import BoardWriteForm from "./BoardWriteForm";
+import FreeBoardContent from "./FreeBoardContent";
 import { getSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +27,10 @@ async function getBoard(slug: string) {
     where: { slug },
     include: {
       posts: {
-        include: { user: { select: { name: true } } },
+        include: {
+          user: { select: { name: true } },
+          _count: { select: { comments: true } },
+        },
         orderBy: { createdAt: "desc" },
       },
     },
@@ -47,8 +51,24 @@ export default async function BoardPage({ params }: { params: Promise<{ slug: st
   const session = await getSession();
 
   const hideList = HIDE_LIST_SLUGS.has(board.slug);
-
+  const isFreeBoard = board.slug === "free";
   const exitHref = EXIT_LINK[board.slug] ?? "/";
+
+  if (isFreeBoard) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-8">
+        <FreeBoardContent
+          posts={board.posts}
+          boardSlug={board.slug}
+          boardName={board.name}
+          exitHref={exitHref}
+          hasSession={!!session}
+          currentUserId={session?.id ?? null}
+          isAdmin={session?.role === "ADMIN"}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">

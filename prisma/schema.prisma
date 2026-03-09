@@ -46,10 +46,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  applications    Application[]
-  lessonApps      LessonApplication[]
-  boardPosts      BoardPost[]
-  notifications   Notification[]
+  applications      Application[]
+  lessonApps        LessonApplication[]
+  boardPosts        BoardPost[]
+  boardPostComments BoardPostComment[]
+  notifications     Notification[]
 }
 
 model Notification {
@@ -160,10 +161,25 @@ model BoardPost {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  board    Board            @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments BoardPostComment[]
 
   @@index([boardId])
+  @@index([userId])
+}
+
+model BoardPostComment {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  post BoardPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
   @@index([userId])
 }
 

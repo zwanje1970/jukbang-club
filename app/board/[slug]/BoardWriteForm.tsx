@@ -7,10 +7,12 @@ export default function BoardWriteForm({
   boardSlug,
   boardName,
   hideTitle = false,
+  onSuccess,
 }: {
   boardSlug: string;
   boardName: string;
   hideTitle?: boolean;
+  onSuccess?: () => void;
 }) {
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -40,7 +42,8 @@ export default function BoardWriteForm({
       }
       setTitle("");
       setContent("");
-      router.refresh();
+      if (onSuccess) onSuccess();
+      else router.refresh();
     } finally {
       setLoading(false);
     }

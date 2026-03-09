@@ -32,3 +32,15 @@ export function formatDateTimeKR(date: Date | string): string {
   const timePart = d.toLocaleTimeString("ko-KR", { timeZone: KOREA, hour: "2-digit", minute: "2-digit", hour12: false });
   return `${datePart} (${weekday}) ${timePart}`;
 }
+
+/** 짧은 날짜+시간 (예: 3/7 15:30) */
+export function formatDateTimeShortKR(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const local = new Date(d.toLocaleString("en-US", { timeZone: KOREA }));
+  const m = local.getMonth() + 1;
+  const day = local.getDate();
+  const h = local.getHours();
+  const min = local.getMinutes();
+  const time = `${h.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}`;
+  return `${m}/${day} ${time}`;
+}

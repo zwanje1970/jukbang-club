@@ -14,6 +14,7 @@ export const routes = {
   boardFree: "/board/free",
   outline: "/outline",
   board: (slug: string) => `/board/${(slug || "").toLowerCase()}`,
+  boardPost: (slug: string, postId: string) => `/board/${(slug || "").toLowerCase()}/${postId}`,
   boardCompetitionInquiry: "/board/competition-inquiry",
   boardLessonInquiry: "/board/lesson-inquiry",
   apply: (competitionId: string) => `/apply/${competitionId}`,
