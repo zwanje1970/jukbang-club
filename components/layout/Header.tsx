@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { routes } from "@/lib/routes";
 import { REPLAY_INTRO_EVENT } from "@/components/IntroScreen";
 
@@ -132,34 +132,34 @@ export default function Header() {
           </button>
         </div>
 
-        {/* 모바일: 상단에 메뉴 버튼들 가로 배치 */}
-        <nav className="flex gap-2 overflow-x-auto py-2 md:hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {nav.map(({ href, label, logout, iconOnly }) =>
-            logout ? (
-              <button
-                key="logout"
-                type="button"
-                onClick={handleLogout}
-                className="shrink-0 rounded bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/20"
-              >
-                로그아웃
-              </button>
-            ) : (
-              <Link
-                key={href}
-                href={href}
-                aria-label={iconOnly ? label : undefined}
-                aria-current={isActiveNav(href) ? "page" : undefined}
-                className={`flex shrink-0 items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition hover:bg-white/20 ${
-                  isActiveNav(href) ? "bg-amber-500/40 text-amber-300 ring-1 ring-amber-400/50" : "bg-white/10 text-white"
-                }`}
-                onClick={() => setOpen(false)}
-              >
-                {iconOnly ? <AdminIcon /> : label}
-                {isActiveNav(href) && <span className="text-[10px] text-amber-300/90">현재</span>}
-              </Link>
-            )
-          )}
+        {/* 모바일: 메뉴를 | 로 구분, 한 줄 넘치면 다음 줄로 줄바꿈, 현재 페이지는 볼드+색상 */}
+        <nav className="flex flex-wrap items-center gap-y-1 py-2 md:hidden">
+          {nav.map(({ href, label, logout, iconOnly }, index) => (
+            <Fragment key={logout ? "logout" : href}>
+              {index > 0 && <span className="select-none px-0.5 text-white/40">|</span>}
+              {logout ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-xs text-white hover:text-amber-400"
+                >
+                  로그아웃
+                </button>
+              ) : (
+                <Link
+                  href={href}
+                  aria-label={iconOnly ? label : undefined}
+                  aria-current={isActiveNav(href) ? "page" : undefined}
+                  className={`inline-flex items-center text-xs transition hover:text-amber-400 ${
+                    isActiveNav(href) ? "font-bold text-amber-400" : "text-white"
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  {iconOnly ? <AdminIcon /> : label}
+                </Link>
+              )}
+            </Fragment>
+          ))}
         </nav>
       </div>
 
@@ -181,16 +181,13 @@ export default function Header() {
                 href={href}
                 aria-label={iconOnly ? label : undefined}
                 aria-current={isActiveNav(href) ? "page" : undefined}
-                className={`flex items-center justify-between gap-2 py-2 text-sm hover:text-amber-400 ${
-                  isActiveNav(href) ? "text-amber-400 font-medium" : "text-white"
+                className={`flex items-center gap-2 py-2 text-sm hover:text-amber-400 ${
+                  isActiveNav(href) ? "font-bold text-amber-400" : "text-white"
                 }`}
                 onClick={() => setOpen(false)}
               >
-                <span className="flex items-center gap-2">
-                  {iconOnly ? <AdminIcon /> : null}
-                  {iconOnly ? <span className="sr-only">{label}</span> : label}
-                </span>
-                {isActiveNav(href) && <span className="text-xs text-amber-400/90">현재 페이지</span>}
+                {iconOnly ? <AdminIcon /> : null}
+                {iconOnly ? <span className="sr-only">{label}</span> : label}
               </Link>
             )
           )}

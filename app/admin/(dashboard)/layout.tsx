@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { routes } from "@/lib/routes";
+import AdminDashboardNav from "@/components/admin/AdminDashboardNav";
 
 export const dynamic = "force-dynamic";
 
@@ -24,17 +25,16 @@ export default async function AdminDashboardLayout({
     { href: routes.adminSettings, label: "메인설정" },
   ];
 
+  const logoutHref = `/api/auth/logout?next=${encodeURIComponent(routes.adminLogin)}`;
+
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="border-b border-gray-200 bg-[#0d4a2c] text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link href={routes.admin} className="font-semibold text-amber-400">관리자</Link>
-          <nav className="flex gap-4 text-sm">
-{nav.map(({ href, label }) => (
-            <Link key={label} href={href} className="hover:text-amber-400">{label}</Link>
-          ))}
-            <a href={`/api/auth/logout?next=${encodeURIComponent(routes.adminLogin)}`} className="hover:text-amber-400">로그아웃</a>
-          </nav>
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <Link href={routes.admin} className="font-semibold text-amber-400">
+            관리자
+          </Link>
+          <AdminDashboardNav nav={nav} logoutHref={logoutHref} />
         </div>
       </header>
       <div className="mx-auto max-w-7xl px-4 py-8">{children}</div>
