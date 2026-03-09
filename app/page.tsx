@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import MainBanner from "@/components/home/MainBanner";
 import YoutubeBroadcast from "@/components/home/YoutubeBroadcast";
@@ -45,7 +46,7 @@ async function getLatestCompetitionWithBracket(): Promise<{
 } | null> {
   try {
     const list = await prisma.competition.findMany({
-      where: { bracketData: { not: null } },
+      where: { bracketData: { not: Prisma.DbNull } },
       orderBy: { date: "desc" },
       take: 1,
       select: { id: true, bracketData: true },
