@@ -150,9 +150,19 @@ export default function Header() {
           )}
         </div>
 
-        {/* 모바일: 메뉴를 | 로 구분, 나가기는 오른쪽 */}
+        {/* 모바일: 나가기는 왼쪽, 메뉴는 오른쪽 */}
         <nav className="flex flex-wrap items-center justify-between gap-y-1 py-2 md:hidden">
-          <div className="flex flex-wrap items-center">
+          <div className="shrink-0 rounded border border-white/40 bg-white/5 px-3 py-1.5">
+            <button
+              type="button"
+              onClick={handleExit}
+              className="text-xs text-white hover:text-amber-400"
+              aria-label="사이트 종료"
+            >
+              나가기
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center justify-end">
             {nav.filter((item) => !item.iconOnly).map(({ href, label, logout, iconOnly }, index) => (
               <Fragment key={logout ? "logout" : href}>
                 {index > 0 && <span className="select-none px-0.5 text-white/40">|</span>}
@@ -186,16 +196,6 @@ export default function Header() {
                 )}
               </Fragment>
             ))}
-          </div>
-          <div className="shrink-0 rounded border border-white/40 bg-white/5 px-3 py-1.5">
-            <button
-              type="button"
-              onClick={handleExit}
-              className="text-xs text-white hover:text-amber-400"
-              aria-label="사이트 종료"
-            >
-              나가기
-            </button>
           </div>
         </nav>
       </div>
