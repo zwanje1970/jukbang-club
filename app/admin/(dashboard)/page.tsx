@@ -14,7 +14,7 @@ export default function AdminDashboardPage() {
   return (
     <div>
       <h1 className="mb-8 text-2xl font-bold text-gray-800">관리자 대시보드</h1>
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {links.map(({ href, label }) => (
           <li key={label}>
             <Link href={href} className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md">

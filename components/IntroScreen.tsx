@@ -199,6 +199,7 @@ export default function IntroScreen({ onEnd }: IntroScreenProps) {
         <div className="ball red" />
         <div className="ball white" />
       </div>
+      <p className="intro-tap-hint">아무 곳이나 터치(클릭)시 메인으로 이동</p>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import VenueIntroEditor, { type VenueIntroEditorRef } from "@/components/admin/VenueIntroEditor";
+import BlobImageUploadButton from "@/components/BlobImageUploadButton";
 
 const KEYS = [
   "mainBannerTitle",
@@ -120,6 +121,9 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
       <div>
         <label className="block text-sm font-medium text-gray-700">당구장안내</label>
         <p className="mt-0.5 text-xs text-gray-500">굵게, 기울임, 글자 크기·색상, 이미지 첨부 가능</p>
+        <div className="mt-2">
+          <BlobImageUploadButton menuName="당구장 시설 안내" label="당구장 시설 이미지 업로드 (Blob)" />
+        </div>
         <div className="mt-1">
           <VenueIntroEditor
             ref={venueEditorRef}

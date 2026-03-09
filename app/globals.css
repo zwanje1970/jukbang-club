@@ -167,6 +167,19 @@ body {
   transition: opacity 0.25s;
 }
 
+.intro-tap-hint {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  z-index: 10000;
+  pointer-events: none;
+}
+
 /* Logo (top-left) – hidden until intro reveals */
 .logo {
   display: flex;
@@ -213,4 +226,12 @@ body[data-logo-visible] .logo-ball {
 
 body[data-logo-visible] .logo-text span {
   opacity: 1;
+}
+
+/* 모바일: 로고 항상 표시 (인트로 여부와 관계없이) */
+@media (max-width: 767px) {
+  .logo .logo-ball,
+  .logo .logo-text span {
+    opacity: 1;
+  }
 }
