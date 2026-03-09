@@ -19,10 +19,13 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ username, password, admin: true }),
         credentials: "include",
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const message = data.error || "로그인에 실패했습니다.";
-        setError(data.detail ? `${message}\n(${data.detail})` : message);
+        const isDb503 = res.status === 503 && (data.code === "DB_CONFIG" || data.code === "DB_CONNECT" || data.code === "DB_TIMEOUT");
+        const message = isDb503
+          ? "데이터베이스에 연결할 수 없습니다.\n\nVercel 대시보드 → 프로젝트 → Settings → Environment Variables에서 DATABASE_URL을 Neon 연결 문자열(postgresql://...?sslmode=require)로 설정한 뒤 재배포하세요."
+          : (data.error || "로그인에 실패했습니다.") + (data.detail ? `\n(${data.detail})` : "");
+        setError(message);
         return;
       }
       if (typeof window !== "undefined") window.location.href = "/admin";
