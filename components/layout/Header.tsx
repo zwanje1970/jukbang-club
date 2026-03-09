@@ -121,25 +121,24 @@ export default function Header() {
               )
             )}
           </nav>
-          <button
-            type="button"
-            className="hidden shrink-0 rounded p-2 text-white hover:bg-white/10 md:hidden"
-            onClick={() => setOpen((o) => !o)}
-            aria-label="메뉴"
-          >
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {open ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-            </svg>
-          </button>
+          {isAdmin && (
+            <Link
+              href={routes.admin}
+              aria-label="관리자"
+              aria-current={isActiveNav(routes.admin) ? "page" : undefined}
+              className={`md:hidden flex shrink-0 items-center gap-1 rounded p-2 text-white hover:bg-white/10 ${
+                isActiveNav(routes.admin) ? "text-amber-400" : ""
+              }`}
+            >
+              <AdminIcon mobile />
+              <span className="text-sm font-medium">ADMIN</span>
+            </Link>
+          )}
         </div>
 
-        {/* 모바일: 메뉴를 | 로 구분, 한 줄 넘치면 다음 줄로 줄바꿈, 현재 페이지는 볼드+색상 */}
+        {/* 모바일: 메뉴를 | 로 구분 (관리자는 상단 오른쪽에 있으므로 제외) */}
         <nav className="flex flex-wrap items-center gap-y-1 py-2 md:hidden">
-          {nav.map(({ href, label, logout, iconOnly }, index) => (
+          {nav.filter((item) => !item.iconOnly).map(({ href, label, logout, iconOnly }, index) => (
             <Fragment key={logout ? "logout" : href}>
               {index > 0 && <span className="select-none px-0.5 text-white/40">|</span>}
               {logout ? (
