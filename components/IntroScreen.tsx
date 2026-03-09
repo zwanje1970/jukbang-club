@@ -29,7 +29,7 @@ function runIntro(onEnd: () => void): () => void {
   balls.forEach((ball) => {
     ball.style.transition = "none";
     ball.style.opacity = "1";
-    ball.style.transform = "translate(0,0) scale(1.5)";
+    ball.style.transform = "translate(0,0) scale(1.35)";
   });
 
   const timeouts: ReturnType<typeof setTimeout>[] = [];

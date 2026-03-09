@@ -26,6 +26,9 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
   }, []);
 
   const endIntro = () => {
+    document.body.dataset.logoVisible = "1";
+    document.querySelectorAll<HTMLElement>(".logo-ball").forEach((el) => el.style.removeProperty("opacity"));
+    document.querySelectorAll<HTMLElement>(".logo-text span").forEach((t) => t.style.removeProperty("opacity"));
     if (typeof sessionStorage !== "undefined") sessionStorage.setItem(INTRO_SEEN_KEY, "1");
     setShowIntro(false);
   };
