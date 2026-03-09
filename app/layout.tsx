@@ -25,7 +25,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#171717",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -37,11 +41,18 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="죽방클럽" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col bg-white text-gray-900 antialiased`}>
         {naverMapScriptUrl && (
           <Script src={naverMapScriptUrl} strategy="afterInteractive" />
         )}
+        <Script id="pwa-hide-address-bar" strategy="afterInteractive">
+          {`(function(){var w=window;if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){w.addEventListener('load',function(){setTimeout(function(){w.scrollTo(0,1);},100);});}})();`}
+        </Script>
         <LayoutContent>{children}</LayoutContent>
       </body>
     </html>

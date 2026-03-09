@@ -11,7 +11,8 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
-    "db:create-users-table": "npx tsx scripts/create-users-table.ts"
+    "db:create-users-table": "npx tsx scripts/create-users-table.ts",
+    "pwa:icons": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -35,6 +36,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"

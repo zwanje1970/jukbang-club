@@ -36,12 +36,18 @@ function runIntro(onEnd: () => void): () => void {
 
   const phase1Ms = 4143;
   const fadeTo20EndMs = 500 + phase1Ms;
+  const centerEl = intro.querySelector<HTMLElement>(".intro-center");
   timeouts.push(
     setTimeout(() => {
+      /* 줄어든 상태에서 공 간격 0 */
+      if (centerEl) {
+        centerEl.style.transition = `gap ${phase1Ms}ms`;
+        centerEl.style.gap = "0";
+      }
       balls.forEach((ball) => {
         ball.style.transition = `opacity ${phase1Ms}ms, transform ${phase1Ms}ms`;
         ball.style.opacity = "0.2";
-        ball.style.transform = "translate(0,0) scale(0.5)";
+        ball.style.transform = "translate(0, 0) scale(0.5)";
       });
     }, 500)
   );
