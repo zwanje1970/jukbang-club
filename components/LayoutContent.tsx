@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import AdminFloatButton from "@/components/layout/AdminFloatButton";
 import MobileSwipeWrapper from "@/components/MobileSwipeWrapper";
 import NotificationBanner from "@/components/NotificationBanner";
 import IntroScreen from "@/components/IntroScreen";
@@ -50,7 +49,6 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
         </MobileSwipeWrapper>
       </main>
       <Footer />
-      <AdminFloatButton />
     </>
   );
 }

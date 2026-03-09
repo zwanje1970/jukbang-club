@@ -27,7 +27,7 @@ export default function Header() {
   }, []);
   const isAdmin = user?.role === "ADMIN";
 
-  type NavItem = { href: string; label: string; logout?: boolean };
+  type NavItem = { href: string; label: string; logout?: boolean; iconOnly?: boolean };
   const navRight: NavItem[] = user
     ? [
         { href: routes.my, label: "마이페이지" },
@@ -37,7 +37,16 @@ export default function Header() {
         { href: routes.login, label: "로그인" },
         { href: routes.signup, label: "회원가입" },
       ];
-  const nav: NavItem[] = [...NAV_PUBLIC, ...navRight];
+  const navAdmin: NavItem[] = isAdmin ? [{ href: routes.admin, label: "관리자", iconOnly: true }] : [];
+  const nav: NavItem[] = [...NAV_PUBLIC, ...navAdmin, ...navRight];
+
+  const AdminIcon = () => (
+    <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden>
+      <path className="stroke-blue-500" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L4 5v6.09a7 7 0 005 6.64 7 7 0 006 0 7 7 0 005-6.64V5l-8-3z" />
+      <circle className="stroke-current" cx="12" cy="9.5" r="1.8" strokeWidth={2} />
+      <path className="stroke-current" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11.2v2.5" />
+    </svg>
+  );
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -45,7 +54,7 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-black text-white">
+    <header className="relative sticky top-0 z-50 bg-black text-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Link
@@ -76,7 +85,7 @@ export default function Header() {
         </div>
 
         <nav className="hidden md:flex md:items-center md:gap-6">
-          {nav.map(({ href, label, logout }) =>
+          {nav.map(({ href, label, logout, iconOnly }) =>
             logout ? (
               <button
                 key="logout"
@@ -90,11 +99,14 @@ export default function Header() {
               <Link
                 key={href}
                 href={href}
-                className={`text-sm font-medium transition hover:text-amber-400 ${
-                  pathname?.toLowerCase() === href ? "text-amber-400" : "text-white"
+                aria-label={iconOnly ? label : undefined}
+                className={`inline-flex items-center text-sm font-medium transition hover:text-amber-400 ${
+                  pathname?.toLowerCase() === href || (href === routes.admin && pathname?.toLowerCase().startsWith("/admin"))
+                    ? "text-amber-400"
+                    : "text-white"
                 }`}
               >
-                {label}
+                {iconOnly ? <AdminIcon /> : label}
               </Link>
             )
           )}
@@ -117,8 +129,8 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-white/20 bg-black px-4 py-3 md:hidden">
-          {nav.map(({ href, label, logout }) =>
+        <div className="absolute left-0 right-0 top-full z-50 border-t border-white/20 bg-black px-4 py-3 shadow-lg md:hidden">
+          {nav.map(({ href, label, logout, iconOnly }) =>
             logout ? (
               <button
                 key="logout"
@@ -132,10 +144,12 @@ export default function Header() {
               <Link
                 key={href}
                 href={href}
-                className="block py-2 text-sm text-white hover:text-amber-400"
+                aria-label={iconOnly ? label : undefined}
+                className="flex items-center gap-2 py-2 text-sm text-white hover:text-amber-400"
                 onClick={() => setOpen(false)}
               >
-                {label}
+                {iconOnly ? <AdminIcon /> : null}
+                {iconOnly ? <span className="sr-only">{label}</span> : label}
               </Link>
             )
           )}
