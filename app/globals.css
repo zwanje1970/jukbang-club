@@ -167,6 +167,18 @@ body {
   transition: opacity 0.25s;
 }
 
+/* 인트로: 공과 로고 동시 깜빡임 (모바일 포함) */
+@keyframes intro-blink {
+  0%, 100% { opacity: 1; }
+  35% { opacity: 0; }
+  50% { opacity: 1; }
+  85% { opacity: 0; }
+}
+#intro-screen[data-blink] .intro-center .ball,
+#intro-screen[data-blink] .intro-logo-text span {
+  animation: intro-blink 0.6s ease-in-out 1;
+}
+
 .intro-tap-hint {
   position: fixed;
   bottom: 1.5rem;

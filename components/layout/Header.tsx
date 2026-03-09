@@ -150,46 +150,47 @@ export default function Header() {
           )}
         </div>
 
-        {/* 모바일: 메뉴를 | 로 구분 (관리자는 상단 오른쪽에 있으므로 제외) */}
-        <nav className="flex flex-wrap items-center gap-y-1 py-2 md:hidden">
-          {nav.filter((item) => !item.iconOnly).map(({ href, label, logout, iconOnly }, index) => (
-            <Fragment key={logout ? "logout" : href}>
-              {index > 0 && <span className="select-none px-0.5 text-white/40">|</span>}
-              {logout ? (
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="text-xs text-white hover:text-amber-400"
-                >
-                  로그아웃
-                </button>
-              ) : (
-                <Link
-                  href={href}
-                  aria-label={iconOnly ? label : undefined}
-                  aria-current={isActiveNav(href) ? "page" : undefined}
-                  className={`inline-flex min-w-0 items-center gap-0.5 text-xs transition hover:text-amber-400 ${
-                    isActiveNav(href) ? "font-bold text-amber-400" : "text-white"
-                  }`}
-                  onClick={() => setOpen(false)}
-                >
-                  {iconOnly ? (
-                    <>
-                      <AdminIcon mobile />
-                      <span className="shrink-0">{label}</span>
-                    </>
-                  ) : (
-                    label
-                  )}
-                </Link>
-              )}
-            </Fragment>
-          ))}
-          <span className="select-none px-0.5 text-white/40">|</span>
+        {/* 모바일: 메뉴를 | 로 구분, 나가기는 오른쪽 */}
+        <nav className="flex flex-wrap items-center justify-between gap-y-1 py-2 md:hidden">
+          <div className="flex flex-wrap items-center">
+            {nav.filter((item) => !item.iconOnly).map(({ href, label, logout, iconOnly }, index) => (
+              <Fragment key={logout ? "logout" : href}>
+                {index > 0 && <span className="select-none px-0.5 text-white/40">|</span>}
+                {logout ? (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="text-xs text-white hover:text-amber-400"
+                  >
+                    로그아웃
+                  </button>
+                ) : (
+                  <Link
+                    href={href}
+                    aria-label={iconOnly ? label : undefined}
+                    aria-current={isActiveNav(href) ? "page" : undefined}
+                    className={`inline-flex min-w-0 items-center gap-0.5 text-xs transition hover:text-amber-400 ${
+                      isActiveNav(href) ? "font-bold text-amber-400" : "text-white"
+                    }`}
+                    onClick={() => setOpen(false)}
+                  >
+                    {iconOnly ? (
+                      <>
+                        <AdminIcon mobile />
+                        <span className="shrink-0">{label}</span>
+                      </>
+                    ) : (
+                      label
+                    )}
+                  </Link>
+                )}
+              </Fragment>
+            ))}
+          </div>
           <button
             type="button"
             onClick={handleExit}
-            className="text-xs text-white hover:text-amber-400"
+            className="shrink-0 text-xs text-white hover:text-amber-400"
             aria-label="사이트 종료"
           >
             나가기

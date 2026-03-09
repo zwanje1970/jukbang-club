@@ -114,39 +114,19 @@ function runIntro(onEnd: () => void): () => void {
 
   const pauseAfterLettersMs = 300;
   const blinkStartMs = whiteBallLandsMs + phase3Ms + pauseAfterLettersMs;
-  const blinkDurMs = 120;
+  const blinkAnimMs = 600; /* CSS intro-blink 0.6s */
   timeouts.push(
     setTimeout(() => {
-      balls.forEach((b) => {
-        b.style.transition = `opacity ${blinkDurMs}ms`;
-        b.style.opacity = "0";
-      });
-      text.forEach((t) => {
-        (t as HTMLElement).style.transition = `opacity ${blinkDurMs}ms`;
-        (t as HTMLElement).style.opacity = "0";
-      });
+      intro.dataset.blink = "1";
       timeouts.push(
         setTimeout(() => {
-          balls.forEach((b) => (b.style.opacity = "1"));
-          text.forEach((t) => ((t as HTMLElement).style.opacity = "1"));
-          timeouts.push(
-            setTimeout(() => {
-              balls.forEach((b) => (b.style.opacity = "0"));
-              text.forEach((t) => ((t as HTMLElement).style.opacity = "0"));
-              timeouts.push(
-                setTimeout(() => {
-                  balls.forEach((b) => (b.style.opacity = "1"));
-                  text.forEach((t) => ((t as HTMLElement).style.opacity = "1"));
-                }, blinkDurMs)
-              );
-            }, 200)
-          );
-        }, blinkDurMs)
+          delete intro.dataset.blink;
+        }, blinkAnimMs)
       );
     }, blinkStartMs)
   );
 
-  const introFadeMs = blinkStartMs + 550;
+  const introFadeMs = blinkStartMs + blinkAnimMs + 50;
   timeouts.push(
     setTimeout(() => {
       document.body.dataset.logoVisible = "1";
