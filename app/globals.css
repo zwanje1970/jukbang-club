@@ -227,11 +227,3 @@ body[data-logo-visible] .logo-ball {
 body[data-logo-visible] .logo-text span {
   opacity: 1;
 }
-
-/* 모바일: 로고 항상 표시 (인트로 여부와 관계없이) */
-@media (max-width: 767px) {
-  .logo .logo-ball,
-  .logo .logo-text span {
-    opacity: 1;
-  }
-}

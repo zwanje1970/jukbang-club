@@ -11,6 +11,8 @@ type Group = {
   id: number;
   players: string[];
   results: GroupResult[];
+  /** 준결/결승에서 경기 테이블 지정 (예: 1 = TABLE 1) */
+  tableNumber?: number;
 };
 type Round = Group[];
 
@@ -92,7 +94,7 @@ function createRound(players: string[], groupCount: number): Round {
   }));
 }
 
-/** 불참자 제외: rounds에서 allowed에 없는 이름을 제거하고, 빈 조/라운드는 제거 */
+/** 불참자 제외: rounds에서 allowed에 없는 이름을 제거하고, 빈 조/라운드는 제거 (tableNumber 유지) */
 function filterRoundsByAllowed(rounds: Round[], allowed: Set<string>): Round[] {
   return rounds
     .map((round) =>
@@ -101,6 +103,7 @@ function filterRoundsByAllowed(rounds: Round[], allowed: Set<string>): Round[] {
           ...g,
           players: g.players.filter((p) => allowed.has(p)),
           results: g.results.filter((r) => allowed.has(r.name)),
+          tableNumber: g.tableNumber,
         }))
         .filter((g) => g.players.length > 0)
     )
@@ -385,6 +388,19 @@ export default function JukbangTournamentSystem({ applicants, competitionId, ini
     });
   }
 
+  /** 준결/결승에서 경기 테이블 지정 */
+  function setGroupTableNumber(roundIndex: number, groupIndex: number, tableNumber: number | undefined) {
+    setRounds((prev) =>
+      prev.map((r, rIdx) =>
+        rIdx !== roundIndex
+          ? r
+          : r.map((gr, gIdx) =>
+              gIdx !== groupIndex ? gr : { ...gr, tableNumber: tableNumber ?? undefined }
+            )
+      )
+    );
+  }
+
   function goToPreviousRound() {
     setCurrentRound((c) => Math.max(0, c - 1));
   }
@@ -621,8 +637,28 @@ export default function JukbangTournamentSystem({ applicants, competitionId, ini
                         gridColumn: roundColumn,
                       }}
                     >
-                      <div className="border-b border-gray-200 bg-white/60 px-2 py-1 text-sm font-semibold text-amber-600">
-                        {getLabel(gi)}
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 bg-white/60 px-2 py-1 text-sm font-semibold text-amber-600">
+                        <span>{getLabel(gi)}</span>
+                        {!displayOnly && ri >= 1 && (
+                          <label className="flex items-center gap-1 font-normal text-gray-700">
+                            <span>경기 테이블</span>
+                            <select
+                              value={group.tableNumber ?? ""}
+                              onChange={(e) =>
+                                setGroupTableNumber(ri, gi, e.target.value ? parseInt(e.target.value, 10) : undefined)
+                              }
+                              disabled={isClosed}
+                              className="rounded border border-gray-300 bg-white px-1.5 py-0.5 text-xs disabled:opacity-60"
+                            >
+                              <option value="">미지정</option>
+                              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                                <option key={n} value={n}>
+                                  TABLE {n}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        )}
                       </div>
                       <div className="flex flex-1 flex-col">
                         {group.players.map((player, pi) => (

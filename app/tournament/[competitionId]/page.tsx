@@ -51,7 +51,7 @@ export default async function TournamentDetailPage({
             href={`/admin/participants/${competitionId}`}
             className="mb-2 inline-block text-sm text-amber-600 hover:underline"
           >
-            ← 참가자 명단
+            ← 경기자 명단
           </Link>
           <h1 className="mb-2 flex flex-wrap items-baseline gap-2 text-2xl font-bold text-gray-800">
             {competition.name}
