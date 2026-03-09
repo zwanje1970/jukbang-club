@@ -33,10 +33,7 @@ export default function Header() {
         { href: routes.my, label: "마이페이지" },
         { href: "#", label: "로그아웃", logout: true },
       ]
-    : [
-        { href: routes.login, label: "로그인" },
-        { href: routes.signup, label: "회원가입" },
-      ];
+    : [{ href: routes.login, label: "로그인/회원가입" }];
   const navAdmin: NavItem[] = isAdmin ? [{ href: routes.admin, label: "관리자", iconOnly: true }] : [];
   const nav: NavItem[] = [...NAV_PUBLIC, ...navRight, ...navAdmin];
 

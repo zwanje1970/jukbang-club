@@ -10,7 +10,6 @@ export default function MainBanner({ imageUrl, title }: Props) {
     return (
       <section className="bg-gray-100 py-16 text-center">
         <h1 className="text-2xl font-bold text-gray-800 md:text-3xl">{title}</h1>
-        <p className="mt-2 text-gray-600">이미지는 관리자에서 등록할 수 있습니다.</p>
       </section>
     );
   }
