@@ -5,7 +5,7 @@ import YoutubeBroadcast from "@/components/home/YoutubeBroadcast";
 
 export const dynamic = "force-dynamic";
 
-const DEFAULT_TITLE = "당일 당구 시합 안내";
+const DEFAULT_TITLE = "당일 당구시합 안내";
 
 async function getSettings() {
   try {

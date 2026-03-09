@@ -40,8 +40,13 @@ export default function Header() {
   const navAdmin: NavItem[] = isAdmin ? [{ href: routes.admin, label: "관리자", iconOnly: true }] : [];
   const nav: NavItem[] = [...NAV_PUBLIC, ...navAdmin, ...navRight];
 
-  const AdminIcon = () => (
-    <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden>
+  const AdminIcon = ({ mobile }: { mobile?: boolean }) => (
+    <svg
+      className={`shrink-0 ${mobile ? "h-5 w-5" : "h-4 w-4"}`}
+      fill="none"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
       <path className="stroke-blue-500" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L4 5v6.09a7 7 0 005 6.64 7 7 0 006 0 7 7 0 005-6.64V5l-8-3z" />
       <circle className="stroke-current" cx="12" cy="9.5" r="1.8" strokeWidth={2} />
       <path className="stroke-current" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11.2v2.5" />
@@ -118,7 +123,7 @@ export default function Header() {
           </nav>
           <button
             type="button"
-            className="md:hidden shrink-0 rounded p-2 text-white hover:bg-white/10"
+            className="hidden shrink-0 rounded p-2 text-white hover:bg-white/10 md:hidden"
             onClick={() => setOpen((o) => !o)}
             aria-label="메뉴"
           >
@@ -155,7 +160,7 @@ export default function Header() {
                   }`}
                   onClick={() => setOpen(false)}
                 >
-                  {iconOnly ? <AdminIcon /> : label}
+                  {iconOnly ? <AdminIcon mobile /> : label}
                 </Link>
               )}
             </Fragment>
@@ -186,7 +191,7 @@ export default function Header() {
                 }`}
                 onClick={() => setOpen(false)}
               >
-                {iconOnly ? <AdminIcon /> : null}
+                {iconOnly ? <AdminIcon mobile /> : null}
                 {iconOnly ? <span className="sr-only">{label}</span> : label}
               </Link>
             )

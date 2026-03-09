@@ -50,7 +50,7 @@ async function main() {
   await prisma.siteSetting.upsert({
     where: { key: "mainBannerTitle" },
     update: {},
-    create: { key: "mainBannerTitle", value: "당일 당구 시합 안내" },
+    create: { key: "mainBannerTitle", value: "당일 당구시합 안내" },
   });
   await prisma.siteSetting.upsert({
     where: { key: "bankAccount" },

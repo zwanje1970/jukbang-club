@@ -21,7 +21,7 @@ export default async function ResultsPage() {
   const list = await getPastCompetitions();
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">대회 결과</h1>
+      <h1 className="mb-8 text-2xl font-bold text-gray-800">대회결과</h1>
       <ul className="space-y-2">
         {list.map((c) => (
           <li key={c.id}>

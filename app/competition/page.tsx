@@ -27,7 +27,7 @@ export default async function CompetitionPage() {
   const list = await getCompetitions();
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
-      <h1 className="mb-6 text-2xl font-bold text-gray-800">대회 안내</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-800">대회안내</h1>
       <div className="mb-8 flex flex-wrap gap-4">
         <Link
           href={routes.outline}

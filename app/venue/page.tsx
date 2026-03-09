@@ -34,7 +34,7 @@ export default async function VenuePage() {
   const { intro: venueIntro, mapAddress: venueIntroMapAddress, contact: venueIntroContact } = venueSettings;
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">대회 당구장 안내</h1>
+      <h1 className="mb-8 text-2xl font-bold text-gray-800">당구장안내</h1>
       {venueIntro && (
         <div className="mb-10 rounded-lg border border-gray-200 bg-gray-50 p-6">
           <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: venueIntro }} />

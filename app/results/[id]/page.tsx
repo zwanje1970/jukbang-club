@@ -60,7 +60,7 @@ export default async function ResultDetailPage({ params }: { params: Promise<{ i
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
       <Link href="/results" className="mb-6 inline-block text-sm text-amber-600 hover:underline">
-        ← 대회 결과 목록
+        ← 대회결과 목록
       </Link>
       <p className="mb-1 text-sm font-medium text-amber-700">{typeLabel} 대회</p>
       <h1 className="mb-2 flex flex-wrap items-baseline gap-2 text-2xl font-bold text-gray-800">

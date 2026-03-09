@@ -123,7 +123,7 @@ export default function LessonForm({ lessonId, initial }: Props) {
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">내용</label>
-        <p className="mt-0.5 text-xs text-gray-500">굵게, 기울임, 글자 크기·색상, 표, 정렬, 이미지 첨부 가능 (당구장 안내와 동일)</p>
+        <p className="mt-0.5 text-xs text-gray-500">굵게, 기울임, 글자 크기·색상, 표, 정렬, 이미지 첨부 가능 (당구장안내와 동일)</p>
         <div className="mt-1">
           <VenueIntroEditor
             ref={contentEditorRef}
