@@ -38,7 +38,7 @@ export default async function AdminParticipantsDetailPage({ params }: { params: 
 
   return (
     <div>
-      <Link href="/admin/participants" className="mb-6 inline-block text-sm text-amber-600 hover:underline">← 대회운영(참가자, 대진표) 목록</Link>
+      <Link href="/admin/participants" className="mb-6 inline-block text-sm text-amber-600 hover:underline">← 대회운영(참가자/대진표) 목록</Link>
       <h1 className="mb-2 text-2xl font-bold text-gray-800">{c.name}</h1>
       <p className="mb-4 text-gray-600">{formatDateKR(c.date)}</p>
       {c.status === "closed" && (

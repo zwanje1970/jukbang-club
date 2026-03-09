@@ -22,7 +22,7 @@ export default async function AdminParticipantsPage() {
   const todayStr = toDateOnly(new Date());
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">대회운영(참가자, 대진표)</h1>
+      <h1 className="mb-8 text-2xl font-bold text-gray-800">대회운영(참가자/대진표)</h1>
       <p className="mb-6 text-gray-600">대회를 선택하면 참가자 목록을 관리할 수 있습니다.</p>
       <ul className="space-y-2">
         {list.map((c) => {

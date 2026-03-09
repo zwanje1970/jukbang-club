@@ -71,7 +71,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { username, password, admin, redirect: redirectTo } = body;
+    const rawUsername = body.username ?? "";
+    const rawPassword = body.password ?? "";
+    const username = typeof rawUsername === "string" ? rawUsername.trim() : "";
+    const password = typeof rawPassword === "string" ? rawPassword : "";
+    const { admin, redirect: redirectTo } = body;
     if (!username || !password) {
       return NextResponse.json({ error: "아이디와 비밀번호를 입력하세요." }, { status: 400 });
     }

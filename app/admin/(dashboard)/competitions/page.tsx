@@ -18,10 +18,10 @@ export default async function AdminCompetitionsPage() {
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">대회 관리</h1>
+        <h1 className="text-2xl font-bold text-gray-800">대회관리</h1>
         <div className="flex items-center gap-2">
           <Link href="/admin/competitions/outline" className="rounded border border-amber-600 px-4 py-2 text-amber-600 hover:bg-amber-50">대회요강 편집</Link>
-          <Link href="/admin/competitions/new" className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700">대회 생성</Link>
+          <Link href="/admin/competitions/new" className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700">대회생성</Link>
         </div>
       </div>
       <ul className="space-y-2">

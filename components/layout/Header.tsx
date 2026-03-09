@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { routes } from "@/lib/routes";
+import { REPLAY_INTRO_EVENT } from "@/components/IntroScreen";
 
 const NAV_PUBLIC = [
   { href: routes.home, label: "HOME" },
   { href: routes.competition, label: "대회안내" },
   { href: routes.results, label: "대회결과" },
   { href: routes.lesson, label: "당구교실" },
-  { href: routes.venue, label: "대회당구장 안내" },
+  { href: routes.venue, label: "당구장안내" },
 ];
 
 export default function Header() {
@@ -47,11 +48,27 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-black text-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <Link href={routes.home} className="flex items-center gap-1.5 text-lg font-semibold text-amber-400 hover:text-amber-300">
-            <span className="h-4 w-4 shrink-0 rounded-full bg-yellow-400" aria-hidden />
-            <span className="h-4 w-4 shrink-0 rounded-full bg-red-500" aria-hidden />
-            <span className="h-4 w-4 shrink-0 rounded-full bg-white" aria-hidden />
-            죽방클럽
+          <Link
+            href={routes.home}
+            id="logo"
+            className="logo text-amber-400 hover:text-amber-300"
+            onClick={() => {
+              if (!document.getElementById("intro-screen")) {
+                window.dispatchEvent(new CustomEvent(REPLAY_INTRO_EVENT));
+              }
+            }}
+          >
+            <div className="logo-balls" aria-hidden>
+              <div className="logo-ball yellow" />
+              <div className="logo-ball red" />
+              <div className="logo-ball white" />
+            </div>
+            <div className="logo-text">
+              <span>죽</span>
+              <span>방</span>
+              <span>클</span>
+              <span>럽</span>
+            </div>
           </Link>
           {isAdmin && (
             <span className="animate-blink text-xs text-red-500 md:text-sm">관리자로 로그인 중입니다.</span>

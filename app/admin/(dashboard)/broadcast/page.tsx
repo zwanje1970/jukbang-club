@@ -13,7 +13,7 @@ export default async function AdminBroadcastPage() {
   const tables = await getTables();
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">중계 설정 (6테이블)</h1>
+      <h1 className="mb-8 text-2xl font-bold text-gray-800">중계설정</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {tables.map((t) => (
           <BroadcastForm key={t.id} table={t} />

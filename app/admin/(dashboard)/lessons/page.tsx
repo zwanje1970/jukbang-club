@@ -15,8 +15,8 @@ export default async function AdminLessonsPage() {
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">레슨 관리</h1>
-        <Link href="/admin/lessons/new" className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700">레슨 추가</Link>
+        <h1 className="text-2xl font-bold text-gray-800">레슨관리</h1>
+        <Link href="/admin/lessons/new" className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700">레슨생성</Link>
       </div>
       <ul className="space-y-2">
         {lessons.map((l) => (

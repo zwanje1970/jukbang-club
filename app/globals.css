@@ -33,6 +33,7 @@
 html,
 body {
   font-family: "D2CodingLigature", monospace;
+  letter-spacing: -0.03em;
 }
 
 body {
@@ -74,4 +75,103 @@ body {
 }
 .animate-blink {
   animation: blink 1.2s ease-in-out infinite;
+}
+
+/* 6s intro – black screen, flat balls, logo */
+#intro-screen.intro-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.intro-center {
+  display: flex;
+  gap: 12px;
+}
+
+.intro-center .ball {
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  opacity: 1;
+}
+
+.intro-center .ball.yellow {
+  background: #f1c40f;
+}
+.intro-center .ball.red {
+  background: #e74c3c;
+}
+.intro-center .ball.white {
+  background: #ffffff;
+}
+
+/* 인트로 내 "죽방클럽" – 헤더 .logo-text와 동일한 스타일·글자간격 (위치는 JS로 맞춤) */
+.intro-logo-text {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: #fbbf24;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  z-index: 10000;
+}
+
+.intro-logo-text span {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+/* Logo (top-left) – hidden until intro reveals */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 20;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.logo-balls {
+  display: flex;
+  gap: 6px;
+}
+
+.logo-ball {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+body[data-logo-visible] .logo-ball {
+  opacity: 1;
+}
+
+.logo-ball.yellow {
+  background: #f1c40f;
+}
+.logo-ball.red {
+  background: #e74c3c;
+}
+.logo-ball.white {
+  background: #ffffff;
+}
+
+.logo-text span {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+body[data-logo-visible] .logo-text span {
+  opacity: 1;
 }

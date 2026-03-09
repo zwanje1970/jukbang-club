@@ -16,7 +16,7 @@ const KEYS = [
 const LABELS: Record<string, string> = {
   mainBannerTitle: "메인 배너 제목",
   bankAccount: "참가비 입금 계좌",
-  venueIntro: "대회당구장 안내",
+  venueIntro: "당구장안내",
   venueIntroMapAddress: "지도 표시용 주소 (지번)",
   venueIntroContact: "연락처",
 };
@@ -120,7 +120,7 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">대회당구장 안내</label>
+        <label className="block text-sm font-medium text-gray-700">당구장안내</label>
         <p className="mt-0.5 text-xs text-gray-500">굵게, 기울임, 글자 크기·색상, 이미지 첨부 가능</p>
         <div className="mt-1">
           <VenueIntroEditor
@@ -133,7 +133,7 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-gray-700">지도 표시용 주소 (지번)</label>
-          <p className="mt-0.5 text-xs text-gray-500">대회당구장 안내 페이지에 네이버 지도가 표시됩니다.</p>
+          <p className="mt-0.5 text-xs text-gray-500">당구장안내 페이지에 네이버 지도가 표시됩니다.</p>
           <input
             type="text"
             value={form.venueIntroMapAddress ?? ""}

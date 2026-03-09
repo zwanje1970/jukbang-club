@@ -20,7 +20,7 @@ export default async function AdminBoardsPage() {
   const boards = await getBoards();
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">게시판 관리</h1>
+      <h1 className="mb-8 text-2xl font-bold text-gray-800">게시판관리</h1>
       <ul className="space-y-2">
         {boards.map((b) => (
           <li key={b.id}>

@@ -12,7 +12,7 @@ export default async function AdminSettingsPage() {
   const settings = await getSettings();
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold text-gray-800">메인 설정</h1>
+      <h1 className="mb-8 text-2xl font-bold text-gray-800">메인설정</h1>
       <SettingsForm initial={settings} />
     </div>
   );

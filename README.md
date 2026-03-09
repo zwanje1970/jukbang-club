@@ -19,7 +19,7 @@
 2. **환경 변수** (로컬 / 배포 분리)
    - **로컬**: `.env.example`을 복사해 `.env.local`로 저장 후 `DATABASE_URL` 설정 (예: `postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require` — Neon Connection string)
    - **배포(Vercel)**: 프로젝트 설정 > Environment Variables에서 `DATABASE_URL`을 **실제 DB 호스트**로 설정 (localhost 사용 시 연결 실패)
-   - (선택) 네이버 지도: `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=...` — 대회당구장 안내 지도에 사용
+   - (선택) 네이버 지도: `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=...` — 당구장안내 지도에 사용
 
 3. **DB 마이그레이션 및 시드**
    ```bash
