@@ -20,6 +20,14 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
   }, []);
 
   useEffect(() => {
+    if (showIntro === false && typeof document !== "undefined") {
+      document.body.dataset.logoVisible = "1";
+      document.querySelectorAll<HTMLElement>(".logo-ball").forEach((el) => el.style.removeProperty("opacity"));
+      document.querySelectorAll<HTMLElement>(".logo-text span").forEach((t) => t.style.removeProperty("opacity"));
+    }
+  }, [showIntro]);
+
+  useEffect(() => {
     const onReplay = () => setShowIntro(true);
     window.addEventListener(REPLAY_INTRO_EVENT, onReplay);
     return () => window.removeEventListener(REPLAY_INTRO_EVENT, onReplay);
